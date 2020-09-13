@@ -36,7 +36,7 @@ make uninstall
 ```
 
 
-#### Direct commands for installing without prompts
+### Direct commands for installing without prompts
 If you are trying to create a direct install script (for example, to add the bot to a package manager), these are the commands you need:
 ```
 git clone https://github.com/Stefan0436/CMD-R.git
@@ -46,7 +46,7 @@ make
 make install-no-requests
 ```
 
-#### Direct commands for uninstalling without prompts
+### Direct commands for uninstalling without prompts
 If you are trying to create a direct uninstall script (for example, to add the bot to a package manager), these are the commands you need to uninstall it:
 ```
 git clone https://github.com/Stefan0436/CMD-R.git
