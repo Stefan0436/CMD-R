@@ -1,4 +1,10 @@
 #!/bin/bash
+echo Marking files as executable...
+chmod +x commit
+chmod +x init-repo
+chmod +x commit-and-push
+chmod +x pull
+chmod +x lib/*
 echo Checking dependencies...
 echo Searching for mono...
 missingdepends=false

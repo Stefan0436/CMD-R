@@ -15,6 +15,7 @@ if [ ! -f "/usr/bin/cmd-r" ]; then
     chmod 777 /usr/lib/cmd-r
     
     echo CMD-R has been installed, you can run it by running \'cmd-r\'
+    echo Uninstall CMD-R by running \'make uninstall\' inside the downloaded repo.
 else
     read -p "CMD-R is already installed, do you want to update the installation? [Y/n] " -n 1 -r
     echo
@@ -30,5 +31,8 @@ else
         chmod 777 /usr/lib/cmd-r
         
         echo Update completed, run CMD-R by running \'cmd-r\'
+        echo Uninstall CMD-R by running \'make uninstall\' inside the downloaded repo.
+        echo 
+        echo Tip: You can also use \'update-cmdr\' to install the latest update from the repo.
     fi
 fi
