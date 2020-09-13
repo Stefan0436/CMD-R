@@ -1,11 +1,13 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DIROLD=$(pwd)
 cd $DIR
+
 echo Cloning git repo...
 git clone -q https://github.com/Stefan0436/CMD-R.git Update
 if [ -d "Update" ]; then
     cd Update
-    echo Configuring package...
+    echo Configuring package and downloading dependencies...
+    chmod +x ./configure
     ./configure
     echo Compiling...
     make
