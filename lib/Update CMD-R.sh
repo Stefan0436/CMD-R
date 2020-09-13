@@ -1,6 +1,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DIROLD=$(pwd)
-cd $DIR
+cd "$DIR"
 
 echo Cloning git repo...
 git clone -q https://github.com/Stefan0436/CMD-R.git Update
@@ -21,4 +21,4 @@ else
     echo Cloning failed.
 fi
 
-cd $DIROLD
+cd "$DIROLD"
