@@ -34,6 +34,9 @@ uninstall:
 remove:
 	@echo Removing CMD-R from your system...
 	@lib/uninstall.sh
+uninstall-no-requests:
+	@echo Removing CMD-R from your system...
+	@sudo lib/do-uninstall-c.sh
 remove-no-requests:
 	@echo Removing CMD-R from your system...
 	@sudo lib/do-uninstall-c.sh
