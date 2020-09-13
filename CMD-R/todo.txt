@@ -1,0 +1,3 @@
+﻿Help command by categories (with multiple pages)
+Permissions manager
+Offline status

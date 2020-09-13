@@ -1,0 +1,40 @@
+﻿<Properties StartupConfiguration="{10AA5418-A255-4DA3-91BB-CEBDCC091EF0}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CMD-R/Program.cs">
+    <Files>
+      <File FileName="CMD-R/Program.cs" Line="451" Column="25" />
+      <File FileName="CMD-R/SystemCommand.cs" Line="17" Column="35" />
+      <File FileName="CMD-R/BotModule.cs" Line="15" Column="87" />
+      <File FileName="CMD-R/HelpCmdModule/HelpCmdModule.cs" Line="4" Column="27" />
+      <File FileName="CMD-R/HelpCmdModule/HelpCommand.cs" Line="45" Column="40" />
+      <File FileName="CMD-R/GetPermCmdModule/GetPermCmdModule.cs" Line="18" Column="51" />
+      <File FileName="CMD-R/GetPermCmdModule/GetPermCommand.cs" Line="56" Column="34" />
+      <File FileName="CMD-R/Permissions.cs" Line="84" Column="71" />
+      <File FileName="CMD-R/Serializer.cs" Line="21" Column="18" />
+      <File FileName="CMD-R/ArgumentListCreator.cs" Line="61" Column="13" />
+      <File FileName="CMD-R/CmdCategory.cs" Line="20" Column="49" />
+      <File FileName="CMD-R/packages.config" Line="1" Column="1" />
+      <File FileName="CMD-R/PermChecker.cs" Line="71" Column="13" />
+      <File FileName="CMD-R/Terminal.cs" Line="8" Column="2" />
+      <File FileName="CMD-R/todo.txt" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="CMD-R" expanded="True">
+            <Node name="CMD-R" expanded="True">
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.CMD-R PreferredExecutionTarget="MonoDevelop.Default" />
+  <AuthorInfo Name="Stefan Eekhof" Email="" Copyright="" Company="AerialWorks" Trademark="" />
+</Properties>
