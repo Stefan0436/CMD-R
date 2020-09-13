@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ $@ == "--run" ]]; then
+    /usr/lib/cmd-r/update-and-run
+else
+    /usr/lib/cmd-r/update
+fi

@@ -1,0 +1,84 @@
+#!/bin/bash
+echo Checking dependencies...
+echo Searching for mono...
+missingdepends=false
+
+if command -v mono &> /dev/null 
+then
+    echo Mono is installed.
+    monoinstalled=true
+else
+    echo Mono is NOT installed.
+    monoinstalled=false
+    missingdepends=true
+fi
+
+echo Searching for MSBuild...
+if command -v msbuild &> /dev/null 
+then
+    echo MSBuild is installed.
+    msbuildinstalled=true
+else
+    echo Mono is NOT installed.
+    msbuildinstalled=false
+    missingdepends=true
+fi
+
+echo Searching for NuGet...
+if command -v nuget &> /dev/null 
+then
+    echo NuGet is installed.
+    msbuildinstalled=true
+else
+    echo NuGet is NOT installed.
+    msbuildinstalled=false
+    missingdepends=true
+fi
+
+echo Searching for make...
+if command -v make &> /dev/null 
+then
+    echo make is installed.
+    makeinstalled=true
+else
+    echo make is NOT installed.
+    makeinstalled=false
+    missingdepends=true
+fi
+
+echo Searching for Git...
+if command -v git &> /dev/null 
+then
+    echo Git is installed.
+    makeinstalled=true
+else
+    echo Git is NOT installed.
+    makeinstalled=false
+    missingdepends=true
+fi
+
+if [ $missingdepends == "false" ]; then
+    echo
+    echo Trying to restore packages...
+    nuget restore
+    echo
+    echo If package restore succeeded, run make to compile.
+else
+    echo
+    echo You are missing the following dependencies:
+    if [ monoinstalled == "false" ]; then 
+        echo - Mono
+    fi
+    if [ msbuildinstalled == "false" ]; then 
+        echo - MSBuild
+    fi
+    if [ nugetinstalled == "false" ]; then 
+        echo - NuGet
+    fi
+    if [ makeinstalled == "false" ]; then 
+        echo - Make
+    fi
+    if [ gitinstalled == "false" ]; then 
+        echo - Git
+    fi
+fi

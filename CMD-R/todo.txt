@@ -1,3 +1,4 @@
 ﻿Help command by categories (with multiple pages)
 Permissions manager
 Offline status
+Run cmd-r in background and control it from a different program

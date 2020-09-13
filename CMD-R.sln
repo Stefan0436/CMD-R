@@ -6,6 +6,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03EE0309-60D5-4DBF-99E3-360710C96592}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		commit = commit
+		commit-and-push = commit-and-push
+		configure = configure
+		init-repo = init-repo
+		pull = pull
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{76F26F8A-1839-4D61-94EA-0AD9792BE33F}"
+	ProjectSection(SolutionItems) = preProject
+		lib\Start CMD-R = lib\Start CMD-R
 	EndProjectSection
 EndProject
 Global
@@ -29,5 +39,8 @@ Global
 		$0.XmlFormattingPolicy = $3
 		$3.scope = application/xml
 		$0.StandardHeader = $4
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{76F26F8A-1839-4D61-94EA-0AD9792BE33F} = {03EE0309-60D5-4DBF-99E3-360710C96592}
 	EndGlobalSection
 EndGlobal

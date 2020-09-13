@@ -64,8 +64,7 @@ namespace CMDR
             }
             else
             {
-                Console.Write("Bot token: ");
-                token = Terminal.ReadLine().Replace("\n", "");
+                token = Terminal.ReadLine("Bot token").Replace("\n", "");
                 Bot.WriteLine("\nSaved to file Bot.cfg, edit it to change the token.");
                 File.WriteAllText(path + "/Bot.cfg", token);
             }
@@ -112,7 +111,7 @@ namespace CMDR
             {
                 if (module.BaseType == typeof(BotModule))
                 {
-                    Console.Write("Loading module class: " + module.Name);
+                    Bot.WriteLine("Loading module class: " + module.Name);
                     var script = Activator.CreateInstance(module) as BotModule;
                     Bot.WriteLine("Loading module: " + script.id + "...");
                     Bot.WriteLine("Module description: " + script.moduledesctiption);
@@ -128,14 +127,14 @@ namespace CMDR
             {
                 if (File.Exists(info.FullName + "/" + info.Name + ".dll"))
                 {
-                    Console.Write("Loading module file: " + info.FullName + "/" + info.Name + ".dll");
+                    Bot.WriteLine("Loading module file: " + info.FullName + "/" + info.Name + ".dll");
                     Assembly asm = Assembly.LoadFrom(info.FullName + "/" + info.Name + ".dll");
                     Type type = asm.GetType(info.Name + "." + info.Name);
                     var script = Activator.CreateInstance(type) as BotModule;
 
                     if (script == null)
                     {
-                        Console.Write("Module file: '" + info.FullName + "/" + info.Name + ".dll' does not have a class named " + info.Name + " in a namespace named " + info.Name + ", cannot load it, skipping...");
+                        Bot.WriteLine("Module file: '" + info.FullName + "/" + info.Name + ".dll' does not have a class named " + info.Name + " in a namespace named " + info.Name + ", cannot load it, skipping...");
                     }
                     else
                     {
@@ -261,8 +260,7 @@ namespace CMDR
                         Bot.WriteLine(i++ + ") " + guild2.Name + " (" + guild2.Id + ")");
                     }
                     Bot.WriteLine(i + ") Close");
-                    Console.Write("Guild number: ");
-                    string str = Terminal.ReadLine();
+                    string str = Terminal.ReadLine("Option number");
                     if (str != i.ToString())
                     {
                         try

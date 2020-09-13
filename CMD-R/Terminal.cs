@@ -18,6 +18,11 @@ namespace CMDR
         {
             return betterLogger.GetInputLine("TERM");
         }
+
+        public static string ReadLine(string str)
+        {
+            return betterLogger.GetInputLine(str);
+        }
     }
 
     public class BetterLogger
