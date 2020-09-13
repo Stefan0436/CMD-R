@@ -60,6 +60,7 @@ Sadly, you cannot uninstall the bot without cloning the repo again, to simplify 
 git clone https://github.com/Stefan0436/CMD-R.git
 cd CMD-R
 chmod +x ./configure
+./configure
 make
 make uninstall
 ```
@@ -71,6 +72,7 @@ If you are trying to create a direct install script (for example, to add the bot
 git clone https://github.com/Stefan0436/CMD-R.git
 cd CMD-R
 chmod +x ./configure
+./configure
 make
 make install-no-requests
 ```
@@ -81,6 +83,7 @@ If you are trying to create a direct uninstall script (for example, to add the b
 git clone https://github.com/Stefan0436/CMD-R.git
 cd CMD-R
 chmod +x ./configure
+./configure
 make
 make uninstall-no-requests
 ```
