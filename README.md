@@ -1,7 +1,14 @@
-﻿# CMD-R
+```
+
+Note: This discord bot is highly a work in progress system and not currently usable.
+
+Second note: We need a new bot profile picture.
+
+```
+
+
+# CMD-R
 CMD-R is a discord management, scheduling and logging bot.
-
-
 
 # Compiling guide
 ## Linux compiling guide
@@ -14,6 +21,9 @@ CMD-R is a discord management, scheduling and logging bot.
 ### Optional steps (to run or install the bot)
 6.  Run the bot inside the build folder by running `make run`
 7.  Install the bot to your system by running `make install` so you can run it with `cmd-r`
+
+### Guide to get a discord bot token:
+
 
 ## Windows compiling guide
 Coming soon.
