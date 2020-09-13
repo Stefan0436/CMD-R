@@ -42,7 +42,7 @@ Coming soon.
 13. Optional: Add the profile icon as a app icon in the `General Information` page in the settings menu (the left side of the page)
 
 ## Guide for the main configuration
-1.  Start the bot (run `make run` or `cmd-r`, if you installed the bot)
+1.  Start the bot (usually `make run` but `cmd-r` if you installed the bot to your system)
 2.  Enter the bot token you saved in the text file
 3.  Open the url you saved in the text file in a browser, and add the bot to a server.
 (incomplete guide, todo, add the rest of the guide)
