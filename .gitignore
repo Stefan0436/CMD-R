@@ -1,3 +1,4 @@
 packages/
 !.gitignore
 .vs/
+bin/
