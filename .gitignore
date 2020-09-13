@@ -1,0 +1,3 @@
+packages/
+!.gitignore
+.vs/
