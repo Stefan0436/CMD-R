@@ -98,11 +98,23 @@ namespace CMDR
             Bot.WriteLine("Loaded "+roles.Count+" role"+(roles.Count==1?"":"s"));
         }
 
-        public void SaveRole(Role r)
+        public void SaveRole(Role r, string msg = "Saved")
         {
             File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role", Serializer.Serialize(r));
             Bot.WriteLine();
-            Bot.WriteLine("Saved role file '" + r.rolename + "', role information:");
+            Bot.WriteLine(msg+" role file '" + r.rolename + "', role information:");
+            Bot.WriteLine("    ID = " + r.roleid);
+            Bot.WriteLine("    Name = " + r.rolename);
+            Bot.WriteLine("    Permissions = " + r.permissions.Count + " permission node" + (r.permissions.Count == 1 ? "" : "s"));
+            Bot.WriteLine("    Blacklisted Permissions = " + r.permissionsblacklist.Count + " permission node" + (r.permissionsblacklist.Count == 1 ? "" : "s"));
+            Bot.WriteLine();
+        }
+        public void DeleteRole(Role r)
+        {
+            if (roles.Find(t => t.roleid == r.roleid) != null) roles.Remove(roles.Find(t => t.roleid == r.roleid));
+            if (File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role")) File.Delete(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role");
+            Bot.WriteLine();
+            Bot.WriteLine("Deleted role file '" + r.rolename + "', role information:");
             Bot.WriteLine("    ID = " + r.roleid);
             Bot.WriteLine("    Name = " + r.rolename);
             Bot.WriteLine("    Permissions = " + r.permissions.Count + " permission node" + (r.permissions.Count == 1 ? "" : "s"));

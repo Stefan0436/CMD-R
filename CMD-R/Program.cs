@@ -95,6 +95,8 @@ namespace CMDR
 
             client.RoleCreated += Client_RoleCreated;
             client.JoinedGuild += Client_JoinedGuild;
+            client.RoleUpdated += Client_RoleUpdated;
+            client.RoleDeleted += Client_RoleDeleted;
             client.LeftGuild += Client_LeftGuild;
 
             Bot.WriteLine("Synchronizing servers attatched to the bot...");
@@ -336,6 +338,21 @@ namespace CMDR
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        private async Task Client_RoleDeleted(SocketRole arg)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+            DeleteRole(arg.Guild,arg);
+        }
+
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        private async Task Client_RoleUpdated(SocketRole arg1, SocketRole arg2)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+            SyncRole(arg2.Guild, arg2);
+        }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async Task Client_LeftGuild(SocketGuild arg)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
@@ -351,13 +368,13 @@ namespace CMDR
 
         public void DeleteServer(ulong server, string name)
         {
-            if (servers.Find(t => t.id == server) != null)
+            if (Directory.Exists(path + "/Server Configs/" + server))
             {
                 Bot.WriteLine("Bot left server " + name + " (" + server + ")");
                 Bot.WriteLine("Deleting config of the server " + name + " (" + server + ")");
 
                 ulong id = server;
-                servers.Remove(servers.Find(t => t.id == server));
+                if (servers.Find(t => t.id == server) != null) servers.Remove(servers.Find(t => t.id == server));
                 try
                 {
                     Directory.Delete(path + "/Server Configs/" + id, true);
@@ -397,9 +414,13 @@ namespace CMDR
 
         public void SyncRole(SocketGuild server, SocketRole socketRole)
         {
-            Bot.WriteLine("Synchronizing server " + server.Name + " (" + server.Id + ")");
             Server srv = null;
-            if (servers.Find(t => t.id == server.Id) == null) srv = new Server(server.Id, server.Name);
+            if (servers.Find(t => t.id == server.Id) == null)
+            {
+                srv = new Server(server.Id, server.Name);
+                servers.Add(srv);
+                srv.SaveAll();
+            }
             else srv = servers.Find(t => t.id == server.Id);
             Bot.WriteLine("Synchronizing role file...");
             if (srv.roles.Find(t => t.roleid == socketRole.Id) == null)
@@ -409,13 +430,42 @@ namespace CMDR
                 r.permissions = new List<string>(DefaultPermissions);
                 srv.SaveRole(r);
             }
+            else
+            {
+                Role r = srv.roles.Find(t => t.roleid == socketRole.Id);
+                r.rolename = socketRole.Name;
+                srv.SaveRole(r, "Updated");
+            }
+        }
+
+        public void DeleteRole(SocketGuild server, SocketRole socketRole)
+        {
+            Server srv = null;
+            if (servers.Find(t => t.id == server.Id) == null)
+            {
+                srv = new Server(server.Id, server.Name);
+                servers.Add(srv);
+                srv.SaveAll();
+            }
+            else srv = servers.Find(t => t.id == server.Id);
+            Bot.WriteLine("Deleting role file...");
+            if (srv.roles.Find(t => t.roleid == socketRole.Id) != null)
+            {
+                srv.DeleteRole(srv.roles.Find(t => t.roleid == socketRole.Id));
+            }
         }
 
         public void SyncServer(SocketGuild server)
         {
             Bot.WriteLine("Synchronizing server " + server.Name + " (" + server.Id + ")");
             Server srv = null;
-            if (servers.Find(t => t.id == server.Id) == null) srv = new Server(server.Id, server.Name);
+            if (servers.Find(t => t.id == server.Id) == null)
+            {
+                srv = new Server(server.Id, server.Name);
+                servers.Add(srv);
+                srv.SaveAll();
+            }
+
             else srv = servers.Find(t => t.id == server.Id);
             Bot.WriteLine("Synchronizing role files...");
             foreach (SocketRole socketRole in server.Roles)
@@ -426,6 +476,29 @@ namespace CMDR
                     srv.roles.Add(r);
                     r.permissions = new List<string>(DefaultPermissions);
                     srv.SaveRole(r);
+                }
+                else
+                {
+                    Role r = srv.roles.Find(t => t.roleid == socketRole.Id);
+                    r.rolename = socketRole.Name;
+                    srv.SaveRole(r, "Updated");
+                }
+            }
+            foreach (FileInfo file in new DirectoryInfo(Bot.GetBot().path + "/Server Configs/" + srv.id).GetFiles("*.role"))
+            {
+                Role r = Serializer.Deserialize<Role>(File.ReadAllText(file.FullName));
+                bool deleted = true;
+                foreach (SocketRole socketRole in server.Roles)
+                {
+                    if (r.roleid == socketRole.Id)
+                    {
+                        deleted = false;
+                        break;
+                    }
+                }
+                if (deleted)
+                {
+                    srv.DeleteRole(r);
                 }
             }
         }

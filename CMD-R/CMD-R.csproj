@@ -83,7 +83,7 @@
     <Compile Include="CmdCategory.cs" />
     <Compile Include="PermChecker.cs" />
     <Compile Include="ArgumentListCreator.cs" />
-    <Compile Include="Permissions.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Terminal.cs" />
   </ItemGroup>
