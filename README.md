@@ -1,10 +1,8 @@
-```
 <p align="center">
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 THIS IS A WORK IN PROGRESS PROJECT AND NOT CURRENTLY USABLE
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </p>
-```
 
 
 # CMD-R
