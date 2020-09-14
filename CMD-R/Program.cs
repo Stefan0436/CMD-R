@@ -124,7 +124,7 @@ namespace CMDR
                 }
             }
             Bot.WriteLine();
-            Bot.WriteLine("Loading modules frCheckPermissionsom the Modules directory...");
+            Bot.WriteLine("Loading modules from the Modules directory...");
             foreach (DirectoryInfo info in new DirectoryInfo(path + "/Modules").GetDirectories())
             {
                 if (File.Exists(info.FullName + "/" + info.Name + ".dll"))
