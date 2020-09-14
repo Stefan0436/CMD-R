@@ -40,6 +40,14 @@ Coming soon.
 12. Optional: Add a profile icon to the bot in the `Bot` page in the settings menu (the left side of the page)
 13. Optional: Add the profile icon as a app icon in the `General Information` page in the settings menu (the left side of the page)
 
+### Guide for creating a server (for those who dont know how)
+1. Open discord (or the browser version: `https://discord.com/app`)
+2. Click on the '+' in the bar on the right side of the app/page. (2nd/3rd option from the bottom)
+3. Click `Create My Own`
+4. Enter a server name
+5. Optional: Upload a server icon
+6. Click `Create`
+
 ## Guide for the main configuration
 1.  Start the bot (usually `make run` but `cmd-r` if you installed the bot to your system)
 2.  Enter the bot token you saved in the text file
