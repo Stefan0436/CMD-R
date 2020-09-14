@@ -8,11 +8,13 @@ namespace CMDR
         public CmdCategory(string name, string description)
         {
             if (name.Contains(" ")) throw new FormatException("Name cannot contain space symbols.");
-            if (Bot.GetBot().commands.Find(t => t.commandid == name) != null) throw new Exception("Error: a command exists with that id.");
+            if (name.ToLower() == "page") throw new FormatException("Reserved category.");
 
-            if  (Bot.GetBot().CmdCategories.Find(t=>t.name==name) != null)
+            if (Bot.GetBot().commands.Find(t => t.commandid.ToLower() == name.ToLower()) != null) throw new Exception("Error: a command exists with that id.");
+
+            if  (Bot.GetBot().CmdCategories.Find(t=>t.name.ToLower() == name.ToLower()) != null)
             {
-                if (Bot.GetBot().CmdCategories.Find(t => t.name == name).description != description)
+                if (Bot.GetBot().CmdCategories.Find(t => t.name.ToLower() == name.ToLower()).description != description)
                 {
                     ConsoleColor b = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.DarkYellow;

@@ -47,6 +47,9 @@ Coming soon.
 3.  Open the url you saved in the text file in a browser, and add the bot to a server.
 (incomplete guide, todo, add the rest of the guide)
 
+## Guide for module development
+Coming soon
+
 # Other guides
 
 ### Updating an installed version
