@@ -437,7 +437,7 @@ namespace CMDR
             var message = msg as SocketUserMessage;
             if (message == null) return;
 
-            if (msg.Content.StartsWith("+"))
+            if (msg.Content.StartsWith("+", StringComparison.CurrentCulture))
             {
                 bool found = false;
                 foreach (SystemCommand cmd in commands)
