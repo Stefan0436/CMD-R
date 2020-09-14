@@ -1,9 +1,15 @@
-﻿Bot core:
+﻿IMPORTANT:
+Dependency list in readme (including c# libraries and nuget packages)
+
+Bot core:
 Help command by categories (with multiple pages)
 Offline status
 Run cmd-r in background and control it from a different program
 System reboot command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
 System reboot and update command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
+
+Branch support in update-cmdr
+Help system im update-cmdr and help argument
 
 Module SDK
 Module SDK documentation
