@@ -124,7 +124,7 @@ namespace CMDR
                 }
             }
             Bot.WriteLine();
-            Bot.WriteLine("Loading modules from the Modules directory...");
+            Bot.WriteLine("Loading modules frCheckPermissionsom the Modules directory...");
             foreach (DirectoryInfo info in new DirectoryInfo(path + "/Modules").GetDirectories())
             {
                 if (File.Exists(info.FullName + "/" + info.Name + ".dll"))
@@ -509,8 +509,8 @@ namespace CMDR
         {
             var message = msg as SocketUserMessage;
             if (message == null) return;
-
-            if (msg.Content.StartsWith("+", StringComparison.CurrentCulture))
+            SocketTextChannel ch = message.Channel as SocketTextChannel;
+            if (msg.Content.StartsWith("+", StringComparison.CurrentCulture) && ch != null)
             {
                 bool found = false;
                 foreach (SystemCommand cmd in commands)
@@ -528,7 +528,6 @@ namespace CMDR
                         
                         if (cmd.commandid.ToLower() == cmdid.ToLower())
                         {
-                            SocketTextChannel ch = message.Channel as SocketTextChannel;
                             found = true;
 
                             if (CheckPermissions(cmd.permissionnode, msg.Author, ch.Guild))
@@ -542,15 +541,19 @@ namespace CMDR
                             }
                             else
                             {
-                                await message.Channel.SendMessageAsync("```diff\n-I am sorry, but you are not allowed to run that command```");
+                                await message.Channel.SendMessageAsync("```diff\n- I am sorry, but you are not allowed to run that command```");
                             }
                         }
                     }
                 }
                 if (!found)
                 {
-                     await message.Channel.SendMessageAsync("I am sorry, but i don't recognize that command, use +help for commands.");
+                    await message.Channel.SendMessageAsync("I am sorry, but i don't recognize that command, use +help for commands.");
                 }
+            }
+            else
+            {
+                if (message.Channel is SocketDMChannel && message.Author.Id != client.CurrentUser.Id) await msg.Channel.SendMessageAsync("```diff\n- I am sorry, but CMD-R do not support direct messages yet.\n- Please go to a server and run +help for a list of commands```");
             }
         }
 
