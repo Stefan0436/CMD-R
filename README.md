@@ -1,10 +1,6 @@
-```
-
-Note: This discord bot is highly a work in progress system and not currently usable.
-
-Second note: We need a new bot profile picture.
-
-```
+# +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+# THIS IS A WORK IN PROGRESS PROJECT AND NOT CURRENTLY USABLE
+# +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 # CMD-R
