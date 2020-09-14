@@ -9,7 +9,7 @@ echo Checking dependencies...
 echo Searching for mono...
 missingdepends=false
 
-requiredvermono=5.18.1
+requiredvermono=5.18.0
 requiredvermsbuild=15.6.0.0
 requiredvernuget=5.6.0.6591
 requiredvermake=4.3
