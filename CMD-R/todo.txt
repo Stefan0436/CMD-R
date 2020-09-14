@@ -2,3 +2,4 @@
 Permissions manager
 Offline status
 Run cmd-r in background and control it from a different program
+Fix configure missing dependency list system

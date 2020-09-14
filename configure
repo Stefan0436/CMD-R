@@ -73,18 +73,18 @@ else
     echo
     echo You are missing the following dependencies:
     if [ monoinstalled == "false" ]; then 
-        echo - Mono
+        echo \- Mono
     fi
     if [ msbuildinstalled == "false" ]; then 
-        echo - MSBuild
+        echo \- MSBuild
     fi
     if [ nugetinstalled == "false" ]; then 
-        echo - NuGet
+        echo \- NuGet
     fi
     if [ makeinstalled == "false" ]; then 
-        echo - Make
+        echo \- Make
     fi
     if [ gitinstalled == "false" ]; then 
-        echo - Git
+        echo \- Git
     fi
 fi
