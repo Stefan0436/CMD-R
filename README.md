@@ -57,7 +57,7 @@ Updating is simple, just run `update-cmdr` to download and install the latest ve
 Or alternatively, do the compiling guide again, which overwrites the current installation.
 
 
-### Uninstalling an installed version
+### Uninstalling an CMD-R installation
 Sadly, you cannot uninstall the bot without cloning the repo again, to simplify the process, here are the commands to uninstall the bot:
 ```
 git clone https://github.com/Stefan0436/CMD-R.git
