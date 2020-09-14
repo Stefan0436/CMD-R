@@ -1,6 +1,7 @@
 #!/bin/bash
 echo Marking files as executable...
 chmod +x commit
+chmod +x push
 chmod +x init-repo
 chmod +x commit-and-push
 chmod +x pull

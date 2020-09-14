@@ -1,4 +1,42 @@
-﻿Help command by categories (with multiple pages)
-Permissions manager
+﻿Bot core:
+Help command by categories (with multiple pages)
 Offline status
 Run cmd-r in background and control it from a different program
+System reboot command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
+System reboot and update command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
+
+Module SDK
+Module SDK documentation
+
+Bot features (each feature needs its own module):
+Nickname change detection, per channel
+Timers
+Silent timers (single line)
+Polls
+Events
+Controller roles (with setup wizard)
+Command line channel
+Warnings channel and command
+Alerts channel and command
+Ban command
+Kick command
+Mute command
+Status cards (through message editing)
+Game server status (sub-bots)
+Scheduler
+Bot command permissions
+Permissions manager
+Game RCON Terminal
+User nickname change command
+Nickname command (the bot itself)
+Other log events
+
+Guides:
+Setup guide (token, adding to server, controller role setup)
+Module SDK setup/install guide
+Module SDK documentation install guide
+Module development guide
+Windows compiling guide
+
+Other:
+Bot permissions list (specific required permissions, with options)

@@ -50,7 +50,7 @@ namespace CMDR
 
             path = Application.ExecutablePath.Remove(Application.ExecutablePath.LastIndexOf(Path.DirectorySeparatorChar));
             Bot.WriteLine("Booting CMD-R...");
-            Bot.WriteLine("AerialWorks CMD-R is Free(Libre) and Open Source Software (FLOSS),\nand will always be licensed under the GPL license.");
+            Bot.WriteLine("AerialWorks CMD-R is Free(Libre) and Open Source Software (FLOSS),\nand will always be licensed under the GPL-2.0 license.");
             Bot.WriteLine("------------------------------------------------------------------");
             Bot.WriteLine();
             Bot.WriteLine("System path: " + path);

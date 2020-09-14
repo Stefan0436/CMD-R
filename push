@@ -1,3 +1,2 @@
-#!/bin/bash
-./commit
+﻿#!/bin/bash
 git push repo master
