@@ -69,7 +69,7 @@ namespace CMDR
                 File.WriteAllText(path + "/Bot.cfg", token);
             }
 
-            Bot.WriteLine("Strting Discord.NET framework...");
+            Bot.WriteLine("Starting Discord.NET framework...");
             client = new DiscordSocketClient();
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
@@ -205,7 +205,7 @@ namespace CMDR
                 {
                     string status = command.Substring("setstatus ".Length);
                     if (status == "online") await client.SetStatusAsync(UserStatus.Online);
-                    else if (status == "offline") await client.SetStatusAsync(UserStatus.Offline);
+                    else if (status == "offline (broken, sets to invisible)") await client.SetStatusAsync(UserStatus.Invisible); // Offline does nothing, this works better
                     else if (status == "invisible") await client.SetStatusAsync(UserStatus.Invisible);
                     else if (status == "do-not-disturb") await client.SetStatusAsync(UserStatus.DoNotDisturb);
                     else if (status == "idle") await client.SetStatusAsync(UserStatus.Idle);
@@ -283,11 +283,11 @@ namespace CMDR
                         }
                     }
                 }
-                else if (command == "activeguild")
+                else if (command == "activeserver")
                 {
                     if (guild != 0)
                     {
-                        Bot.WriteLine("Active Guild: " + client.GetGuild(guild).Name + " (" + guild + ")");
+                        Bot.WriteLine("Active server: " + client.GetGuild(guild).Name + " (" + guild + ")");
                     }
                     else
                     {
@@ -321,7 +321,7 @@ namespace CMDR
 
                     if (!found)
                     {
-                        Bot.WriteLine("Commands:\nquit - stop bot\nexit - stop bot\nsetgame <game> - set the game name (used often as status)\nclrgame - clear the game setting\nsetstatus <status> - set status (online/offline/invisible/do-not-disturb/idle/afk)\nStringComparison.CurrentCulture - choose a guild (this includes servers)\nmsg <channel> <msg> - send a message to a text channel\nactiveguild - print the active guild name and id");
+                        Bot.WriteLine("Commands:\nquit - stop bot\nexit - stop bot\nsetgame <game> - set the game name (used often as status)\nclrgame - clear the game setting\nsetstatus <status> - set status (online/offline/invisible/do-not-disturb/idle/afk)\nselectserver - choose a guild (this includes servers)\nmsg <channel> <msg> - send a message to a text channel\nactiveserver - print the active guild name and id");
                         foreach (SystemCommand cmd in commands)
                         {
                             if (cmd.allowTerminal)
