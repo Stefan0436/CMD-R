@@ -254,12 +254,12 @@ namespace CMDR
                     List<SocketGuild> guilds = new List<SocketGuild>(client.Guilds);
                     SocketGuild guild3 = null;
                     int i = 1;
-                    Bot.WriteLine("Please select a guild number:");
+                    Bot.WriteLine("Please select a server:");
                     foreach (SocketGuild guild2 in guilds)
                     {
                         Bot.WriteLine(i++ + ") " + guild2.Name + " (" + guild2.Id + ")");
                     }
-                    Bot.WriteLine(i + ") Close");
+                    Bot.WriteLine(i + ") Cancel");
                     string str = Terminal.ReadLine("Option number");
                     if (str != i.ToString())
                     {
@@ -269,7 +269,7 @@ namespace CMDR
                             if (num > 0 && num < guilds.Count + 1)
                             {
                                 guild3 = guilds[num - 1];
-                                Bot.WriteLine("Selected guild: " + guild3.Name);
+                                Bot.WriteLine("Selected server: " + guild3.Name);
                                 guild = guild3.Id;
                             }
                             else
