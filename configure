@@ -9,10 +9,29 @@ echo Checking dependencies...
 echo Searching for mono...
 missingdepends=false
 
+requiredvermono=6.10.0
+requiredvermsbuild=16.5.0.26101
+requiredvernuget=5.6.0.6591
+requiredvermake=4.3
+requiredvergit=2.28.0
+
 if command -v mono &> /dev/null 
 then
-    echo Mono is installed.
-    monoinstalled=true
+    requiredver=$requiredvermono
+    currentver="$(mono --version|grep --only-matching --perl-regexp "\\d+\.\\d+\.\\d+")"
+    packagename=Mono
+    installed=false
+    
+    if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+        echo $packagename is installed.
+        installed=true
+    else
+        echo $packagename is installed but OUTDATED, minimal version: $requiredver, current version: $currentver
+        installed=false
+        missingdepends=true
+    fi
+    
+    monoinstalled=$installed
 else
     echo Mono is NOT installed.
     monoinstalled=false
@@ -22,10 +41,23 @@ fi
 echo Searching for MSBuild...
 if command -v msbuild &> /dev/null 
 then
-    echo MSBuild is installed.
-    msbuildinstalled=true
+    requiredver=$requiredvermsbuild
+    currentver="$(msbuild -version|grep --only-matching --perl-regexp "\\d+\.\\d+\.\\d+\.\\d+")"
+    packagename=MSBuild
+    installed=false
+    
+    if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+        echo $packagename is installed.
+        installed=true
+    else
+        echo $packagename is installed but OUTDATED, minimal version: $requiredver, current version: $currentver
+        installed=false
+        missingdepends=true
+    fi
+    
+    msbuildinstalled=$installed
 else
-    echo Mono is NOT installed.
+    echo MSBuild is NOT installed.
     msbuildinstalled=false
     missingdepends=true
 fi
@@ -33,19 +65,45 @@ fi
 echo Searching for NuGet...
 if command -v nuget &> /dev/null 
 then
-    echo NuGet is installed.
-    msbuildinstalled=true
+    requiredver=$requiredvernuget
+    currentver="$(nuget|grep --only-matching --perl-regexp "\\d+\.\\d+\.\\d+\.\\d+")"
+    packagename=NuGet
+    installed=false
+    
+    if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+        echo $packagename is installed.
+        installed=true
+    else
+        echo $packagename is installed but OUTDATED, minimal version: $requiredver, current version: $currentver
+        installed=false
+        missingdepends=true
+    fi
+    
+    nugetinstalled=$installed
 else
     echo NuGet is NOT installed.
-    msbuildinstalled=false
+    nugetinstalled=false
     missingdepends=true
 fi
 
 echo Searching for make...
 if command -v make &> /dev/null 
 then
-    echo make is installed.
-    makeinstalled=true
+    requiredver=$requiredvermake
+    currentver="$(make --version|grep --only-matching --perl-regexp "\\d+\.\\d+")"
+    packagename=make
+    installed=false
+    
+    if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+        echo $packagename is installed.
+        installed=true
+    else
+        echo $packagename is installed but OUTDATED, minimal version: $requiredver, current version: $currentver
+        installed=false
+        missingdepends=true
+    fi
+    
+    makeinstalled=$installed
 else
     echo make is NOT installed.
     makeinstalled=false
@@ -55,8 +113,21 @@ fi
 echo Searching for Git...
 if command -v git &> /dev/null 
 then
-    echo Git is installed.
-    makeinstalled=true
+    requiredver=$requiredvergit
+    currentver="$(git --version|grep --only-matching --perl-regexp "\\d+\.\\d+\.\\d+")"
+    packagename=Git
+    installed=false
+    
+    if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+        echo $packagename is installed.
+        installed=true
+    else
+        echo $packagename is installed but OUTDATED, minimal version: $requiredver, current version: $currentver
+        installed=false
+        missingdepends=true
+    fi
+    
+    gitinstalled=$installed
 else
     echo Git is NOT installed.
     makeinstalled=false
@@ -72,19 +143,19 @@ if [ $missingdepends == "false" ]; then
 else
     echo
     echo You are missing the following dependencies:
-    if [ monoinstalled == "false" ]; then 
-        echo \- Mono
+    if [ "$monoinstalled" == "false" ]; then 
+        echo Mono version $requiredvermono or above.
     fi
-    if [ msbuildinstalled == "false" ]; then 
-        echo \- MSBuild
+    if [ "$msbuildinstalled" == "false" ]; then 
+        echo MSBuild version $requiredvermsbuild or above.
     fi
-    if [ nugetinstalled == "false" ]; then 
-        echo \- NuGet
+    if [ "$nugetinstalled" == "false" ]; then 
+        echo NuGet version $requiredvernuget or above.
     fi
-    if [ makeinstalled == "false" ]; then 
-        echo \- Make
+    if [ "$makeinstalled" == "false" ]; then 
+        echo Make version $requiredvermake or above.
     fi
-    if [ gitinstalled == "false" ]; then 
-        echo \- Git
+    if [ "$gitinstalled" == "false" ]; then 
+        echo Git version $requiredvergit or above.
     fi
 fi
