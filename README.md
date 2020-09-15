@@ -42,7 +42,7 @@ Coming soon.
 
 ## Guide to create a discord server (for those who dont know how)
 1. Open discord (or the browser version: `https://discord.com/app`)
-2. Click on the '+' in the bar on the right side of the app/page. (2nd/3rd option from the bottom)
+2. Click on the '+' in the menu bar on the right side of the app/page. (2nd/3rd option from the bottom)
 3. Click `Create My Own`
 4. Enter a server name
 5. Optional: Upload a server icon
