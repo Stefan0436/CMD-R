@@ -30,7 +30,7 @@ Ban command
 Kick command
 Mute command
 Status cards (through message editing)
-Game server status (sub-bots)
+Game server status (through sub-bots)
 Scheduler
 Bot command permissions
 Permissions manager
