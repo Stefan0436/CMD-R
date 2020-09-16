@@ -1,4 +1,7 @@
 #!/bin/bash
 git init
 git add .
+if [ -f "packages.config" ]; then
+    rm packages.config
+fi
 ln CMD-R/packages.config packages.config
