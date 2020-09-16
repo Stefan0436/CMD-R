@@ -6,6 +6,9 @@ chmod +x init-repo
 chmod +x commit-and-push
 chmod +x pull
 chmod +x lib/*
+if [ -f "packages.config" ]; then
+    rm packages.config
+fi
 echo Initializing repo...
 ./init-repo
 echo Checking dependencies...
