@@ -89,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelpCmdModule\" />
