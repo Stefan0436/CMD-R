@@ -1,3 +1,4 @@
 #!/bin/bash
 git init
 git add .
+ln CMD-R/packages.config packages.config
