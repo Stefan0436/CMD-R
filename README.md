@@ -54,11 +54,11 @@ Coming soon.
 3.  Open the url you saved in the text file in a browser, and add the bot to a server.
 (incomplete guide, todo, add the rest of the guide)
 
-###  My bot crashes on startup: 'Discord.Net.HttpException: The server responded with error 401: 401: Unauthorized'
+##  My bot crashes on startup: 'Discord.Net.HttpException: The server responded with error 401: 401: Unauthorized'
 It looks like you entered a invalid token, delete the token config by running the following:
 1. (Installed to system): rm -r /usr/lib/cmd-r/Bot.cfg
 1. (Locally in cloned repo): rm -r ./build/Bot.cfg
-2. Start your bot and enter your token again (from the file)
+2. Start your bot and enter your token again (from the info text file)
 
 ## Guide for module development
 Coming soon
