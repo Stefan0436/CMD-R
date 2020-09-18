@@ -32,7 +32,7 @@ Coming soon.
 4.  Then, click on `Bot` in the settings menu (the left side of the page)
 5.  Next, click `Add Bot`
 6.  I know it says `Reveal token` but we are not there yet, scroll down until you see the settings category `Bot Permissions` and select the required permissions (see the bottom of this page)
-7.  Scroll all the way down and copy the number in `Permissions Integer` and save it in a text file named bot info which can be saved anywhere you like, but it is an inportant file, because it will hold your bots information for later in the guides. (line example: Perm Int: \<integer\>)
+7.  Scroll all the way down and copy the number in `Permissions Integer` and save it in a text file named bot info which can be saved anywhere you like, but it is an important file, because it will hold your bots information for later in the guides. (line example: Perm Int: \<integer\>)
 8.  Scroll back up and click the link `Click to Reveal Token` and copy the token to the text file (line example: Token: \<token\>)
 9.  Next, go to the tab `OAuth` in the settings menu (the left side of the page), look for `CLIENT ID` and copy it to the text file (line example: ID: \<client id\>)
 10. Then copy the following url to the text file: `https://discord.com/api/oauth2/authorize?client_id=<client id>&permissions=<perm int>&scope=bot` (save it twice, in one, change the id and the perm integer, example line: URL-1/2: \<url\>)
