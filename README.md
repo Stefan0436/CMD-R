@@ -104,8 +104,8 @@ make
 make uninstall-no-requests
 ```
 
-### I am a collaborator and i get the following error: 'fatal: \'repo\' does not appear to be a git repository'
-You seem to be missing the repo upstream, to fix this, run: `git remote add repo https://github.com/Stefan0436/CMD-R.git`
+### I am a collaborator and i get the following error: `fatal: \'repo\' does not appear to be a git repository`
+You seem to be missing the repo upstream, to fix this, run: `git remote add repo https://github.com/Stefan0436/CMD-R.git` in your locally cloned repository
 
 ## Required bot permissions:
 Administrator (temporary, specific perms are coming soon!)
