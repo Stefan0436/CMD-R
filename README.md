@@ -36,7 +36,7 @@ Coming soon.
 8.  Scroll back up and click the link `Click to Reveal Token` and copy the token to the text file (line example: Token: \<token\>)
 9.  Next, go to the tab `OAuth` in the settings menu (the left side of the page), look for `CLIENT ID` and copy it to the text file (line example: ID: \<client id\>)
 10. Then copy the following url to the text file: `https://discord.com/api/oauth2/authorize?client_id=<client id>&permissions=<perm int>&scope=bot` (save it twice, so that you can change it later using the template, in one of them, change the id and the perm integer, remove the '\<' and the '\>', example line: URL-1/2: \<url\>)
-11. Use the url you just created to add the bot to servers
+11. Use the url you just created to add the bot to servers (copy it and open it in your browser, see 'Guide to create a discord server' for creating a server)
 12. Optional: Add a profile icon to the bot in the `Bot` page in the settings menu (the left side of the page)
 13. Optional: Add the profile icon as a app icon in the `General Information` page in the settings menu (the left side of the page)
 
