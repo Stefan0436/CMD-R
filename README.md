@@ -107,5 +107,10 @@ make uninstall-no-requests
 ### I am a collaborator and i get the following error: `fatal: 'repo' does not appear to be a git repository`
 You seem to be missing the repo upstream, to fix this, run: `git remote add repo https://github.com/Stefan0436/CMD-R.git` in your locally cloned repository
 
+### I keep needing my credentials, how do store them on my drive?
+To do this, you only need to run a command, you can choose between the following:
+1. Save in plain text file (less safe): `git config credential.helper 'store'`
+2. Save in cache (safer): git config credential.helper 'store cache'`
+
 ## Required bot permissions:
 Administrator (temporary, specific perms are coming soon!)
