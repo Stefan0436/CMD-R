@@ -56,8 +56,8 @@ Coming soon.
 
 ##  My bot crashes on startup: 'Discord.Net.HttpException: The server responded with error 401: 401: Unauthorized'
 It looks like you entered a invalid token, delete the token config by running the following:
-1. (Installed to system): rm -r /usr/lib/cmd-r/Bot.cfg
-1. (Locally in cloned repo): rm -r ./build/Bot.cfg
+1. (Installed to system): `rm -r /usr/lib/cmd-r/Bot.cfg`
+1. (Locally in cloned repo): `rm -r ./build/Bot.cfg`
 2. Start your bot and enter your token again (from the info text file)
 
 ## Guide for module development
@@ -105,7 +105,7 @@ make uninstall-no-requests
 ```
 
 ### I am a collaborator and i get the following error: 'fatal: \'repo\' does not appear to be a git repository'
-You need to have added the repo upstream: git remote add repo https://github.com/Stefan0436/CMD-R.git
+You seem to be missing the repo upstream, to fix this, run: `git remote add repo https://github.com/Stefan0436/CMD-R.git`
 
 ## Required bot permissions:
 Administrator (temporary, specific perms are coming soon!)
