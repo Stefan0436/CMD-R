@@ -67,7 +67,7 @@ Coming soon
 
 ### Updating an installed version
 Updating is simple, just run `update-cmdr` to download and install the latest version, but make sure the bot is completely shut down.
-Or alternatively, do the compiling guide again, which overwrites the current installation.
+Or alternatively, do the compiling guide again, which overwrites the current installation. Tip: `update-cmdr --run` updates and runs at the same time.
 
 
 ### Uninstalling an CMD-R installation
