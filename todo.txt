@@ -2,9 +2,11 @@
 Dependency list in readme (including c# libraries and nuget packages, with copyright notice)
 
 Bot core:
+IMPORTANT: Replace usage of Application.ExecutablePath with a non-winforms alternative
+IMPORTANT: Reduce string and constructor usage and replace with enums
 IMPORTANT: Auto-save instead of change-save (autosave has a configurable interval)
 IMPORTANT: Prevent empty commands (like just the '+' or '+ <something>')
-Help command by categories (with multiple pages)
+Help command by categories (with multiple pages, start commands with '+')
 Offline status
 Run cmd-r in background and control it from a different program
 System reboot command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
