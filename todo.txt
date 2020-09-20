@@ -12,6 +12,7 @@ Run cmd-r in background and control it from a different program
 System reboot command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
 System reboot and update command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
 DM Message support
+Custom command prefixes
 
 Branch support in update-cmdr
 Help system im update-cmdr and help argument

@@ -71,10 +71,11 @@ namespace CMDR
 
             Bot.WriteLine("Starting Discord.NET framework...");
             client = new DiscordSocketClient();
+
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
             await client.SetGameAsync("Starting CMD-R...");
-
+            await client.SetActivityAsync()
             while (client.ConnectionState == ConnectionState.Connecting || client.ConnectionState == ConnectionState.Disconnected) { Thread.Sleep(100); }
             while (client.Guilds.Count == 0 || client.Guilds.FirstOrDefault().Name == null || client.Guilds.FirstOrDefault().Name == "") { Thread.Sleep(100); }
             Bot.WriteLine("Preparing server config directories...");
