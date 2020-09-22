@@ -113,7 +113,7 @@ make uninstall-no-requests
 ## Common problems
 
 ### I am a collaborator and i get the following error: `fatal: 'repo' does not appear to be a git repository`
-You seem to be missing the repo upstream, to fix this, run: `git remote add repo https://github.com/Stefan0436/CMD-R.git` in your locally cloned repository
+You seem to be missing the destination repository, to fix this, run: `git remote add repo <your repo url>` (replace <your repo url>) in your locally cloned repository
 <br/>
 <br/>
 ### I keep needing my credentials, how do store them on my drive?
