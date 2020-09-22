@@ -21,9 +21,11 @@ CMD-R is a discord management, scheduling and logging bot.
 6.  Run the bot inside the build folder by running `make run`
 7.  Install the bot to your system by running `make install` so you can run it with `cmd-r`
 
+<br/>
 
 ## Windows compiling guide
 Coming soon.
+<br/>
 
 ## Guide to get a discord bot token
 1.  Head over to https://discord.com/developers/applications/
@@ -39,6 +41,7 @@ Coming soon.
 11. Use the url you just created to add the bot to servers (copy it and open it in your browser, see 'Guide to create a discord server' for creating a server)
 12. Optional: Add a profile icon to the bot in the `Bot` page in the settings menu (the left side of the page)
 13. Optional: Add the profile icon as a app icon in the `General Information` page in the settings menu (the left side of the page)
+<br/>
 
 ## Guide to create a discord server (for those who don't know how)
 1. Open discord (or the browser version: `https://discord.com/app`)
@@ -47,18 +50,21 @@ Coming soon.
 4. Enter a server name
 5. Optional: Upload a server icon
 6. Click `Create`
+<br/>
 
 ## Guide for the main configuration
 1.  Start the bot (usually `make run` but `cmd-r` if you installed the bot to your system)
 2.  Enter the bot token you saved in the text file
 3.  Open the url you saved in the text file in a browser, and add the bot to a server.
 (incomplete guide, todo, add the rest of the guide)
+<br/>
 
 ##  My bot crashes on startup: 'Discord.Net.HttpException: The server responded with error 401: 401: Unauthorized'
 It looks like you entered a invalid token, delete the token config by running the following:
 1. (Installed to system): `rm -r /usr/lib/cmd-r/Bot.cfg`
 1. (Locally in cloned repo): `rm -r ./build/Bot.cfg`
 2. Start your bot and enter your token again (from the info text file)
+<br/>
 
 ## Guide for module development
 Coming soon
@@ -87,8 +93,6 @@ make uninstall
 
 ### Change the repo config
 If you need to re-configure the locally cloned repo, run: `./configure --newrepoconfig`
-
-<br/>
 
 ### Direct commands for installing or updating without prompts
 If you are trying to create a direct install script (for example, to add the bot to a package manager), these are the commands you need:
