@@ -2,6 +2,7 @@
 Dependency list in readme (including c# libraries and nuget packages, with copyright notice)
 
 Bot core:
+IMPORTANT: Clean and format README
 IMPORTANT: Ask user to store or use cache for passwords when first configuring
 IMPORTANT: Replace usage of Application.ExecutablePath with a non-winforms alternative
 IMPORTANT: Reduce string and constructor usage and replace with enums
