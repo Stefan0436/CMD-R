@@ -14,8 +14,7 @@ if [ ! -f "/usr/bin/cmd-r" ]; then
     cp lib/update-cmdr /usr/bin/update-cmdr -f
     chmod 777 /usr/lib/cmd-r
     
-    echo CMD-R has been installed, you can run it by running \'cmd-r\'
-    echo Uninstall CMD-R by running \'make uninstall\' inside the downloaded repo.
+    echo CMD-R has been installed.
 else
     echo Updating CMD-R...
     cp build/* /usr/lib/cmd-r -r -f
@@ -24,8 +23,5 @@ else
     cp lib/update-cmdr /usr/bin/update-cmdr -f
     chmod 777 /usr/lib/cmd-r
         
-    echo Update completed, run CMD-R by running \'cmd-r\'
-    echo Uninstall CMD-R by running \'make uninstall\' inside the downloaded repo.
-    echo 
-    echo Tip: You can also use \'update-cmdr\' to install the latest update from the repo.
+    echo CMD-R has been updated.
 fi
