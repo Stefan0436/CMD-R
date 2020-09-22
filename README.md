@@ -85,13 +85,18 @@ make uninstall
 ```
 <br/>
 
-### Direct commands for installing without prompts
+### Change the repo config
+If you need to re-configure the locally cloned repo, run: `./configure --newrepoconfig`
+
+<br/>
+
+### Direct commands for installing or updating without prompts
 If you are trying to create a direct install script (for example, to add the bot to a package manager), these are the commands you need:
 ```
 git clone https://github.com/Stefan0436/CMD-R.git
 cd CMD-R
 chmod +x ./configure
-./configure
+./configure --norepoconfig
 make
 make install-no-requests
 ```
@@ -103,7 +108,7 @@ If you are trying to create a direct uninstall script (for example, to add the b
 git clone https://github.com/Stefan0436/CMD-R.git
 cd CMD-R
 chmod +x ./configure
-./configure
+./configure --norepoconfig
 make
 make uninstall-no-requests
 ```
