@@ -67,7 +67,8 @@ Coming soon
 
 ### Updating an installed version
 Updating is simple, just run `update-cmdr` to download and install the latest version, but make sure the bot is completely shut down, the updater relies on complete bot file access or it will crash.<br />
-Or alternatively, do the compiling guide again, which overwrites the current installation.<br />
+.<br />
+Alternatively, do the compiling guide again, which overwrites the current installation.<br />
 Tip: `update-cmdr --run` updates and runs at the same time.
 
 
