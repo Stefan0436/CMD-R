@@ -62,7 +62,7 @@ It looks like you entered a invalid token, delete the token config by running th
 
 ## Guide for module development
 Coming soon
-
+<br/>
 # Other guides
 
 ### Updating an installed version
@@ -70,7 +70,7 @@ Updating is very easy, just run `update-cmdr` to download and install the latest
 .<br />
 Alternatively, do the compiling guide again, which overwrites the current installation.<br />
 Tip: `update-cmdr --run` updates and runs at the same time.
-
+<br/>
 
 ### Uninstalling an CMD-R installation
 Sadly, you cannot uninstall the bot without cloning the repo again, to simplify the process, here are the commands to uninstall the bot:
@@ -82,7 +82,7 @@ chmod +x ./configure
 make
 make uninstall
 ```
-
+<br/>
 
 ### Direct commands for installing without prompts
 If you are trying to create a direct install script (for example, to add the bot to a package manager), these are the commands you need:
@@ -94,7 +94,7 @@ chmod +x ./configure
 make
 make install-no-requests
 ```
-
+<br/>
 ### Direct commands for uninstalling without prompts
 If you are trying to create a direct uninstall script (for example, to add the bot to a package manager), these are the commands you need to uninstall it:
 ```
@@ -106,13 +106,15 @@ make
 make uninstall-no-requests
 ```
 
+## Common problems
+
 ### I am a collaborator and i get the following error: `fatal: 'repo' does not appear to be a git repository`
 You seem to be missing the repo upstream, to fix this, run: `git remote add repo https://github.com/Stefan0436/CMD-R.git` in your locally cloned repository
-
+<br/>
 ### I keep needing my credentials, how do store them on my drive?
 To do this, you only need to run a command, you can choose between the following:
 1. Save in plain text file (less safe, anyone can read your password once they are logged in): `git config credential.helper 'store'` (run inside your locally cloned repository)
 2. Save in cache (safer, but loses credentials on restart): `git config credential.helper 'cache'` (run inside your locally cloned repository)
-
+<br/><br/>
 ## Required bot permissions:
 Administrator (temporary, specific perms are coming soon!)
