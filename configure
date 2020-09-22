@@ -15,7 +15,7 @@ if [ ! -f ".systeminitializedrepobefore" ] && [ ! "$*" == "--norepoconfig" ] || 
     ./init-repo
     echo
     echo Do you want to set a remote repository destination?
-    echo \(this must be manually configured if no was selected, see repo for more info\)
+    echo \(this must be manually configured if no was selected, see README for more info\)
     echo Make sure you have writing permissions for the repository.
     read -p "Do you want to continue [Y/n] " -n 1 -r
     echo
