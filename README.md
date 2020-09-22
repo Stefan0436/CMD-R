@@ -95,6 +95,7 @@ make
 make install-no-requests
 ```
 <br/>
+
 ### Direct commands for uninstalling without prompts
 If you are trying to create a direct uninstall script (for example, to add the bot to a package manager), these are the commands you need to uninstall it:
 ```
