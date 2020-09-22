@@ -118,8 +118,8 @@ You seem to be missing the repo upstream, to fix this, run: `git remote add repo
 <br/>
 ### I keep needing my credentials, how do store them on my drive?
 To do this, you only need to run a command, you can choose between the following:
-1. Save in plain text file (less safe, anyone can read your password once they are logged in): `git config --global credential.helper 'store'`
-2. Save in cache (safer, but loses credentials on restart): `git config --global credential.helper 'cache'`
+1. Save in plain text file (less safe, anyone can read your password once they are logged in):<br/>`git config --global credential.helper 'store'`<br/>
+2. Save in cache (safer, but loses credentials on restart):<br/>`git config --global credential.helper 'cache'`
 <br/><br/>
 ## Required bot permissions:
 Administrator (temporary, specific perms are coming soon!)
