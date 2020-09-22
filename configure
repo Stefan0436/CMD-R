@@ -5,6 +5,8 @@ chmod +x push
 chmod +x init-repo
 chmod +x commit-and-push
 chmod +x pull
+chmod +x set-cache-credentials
+chmod +x set-store-credentials
 chmod +x lib/*
 if [ !  -f ".systeminitializedrepobefore" ]; then
     echo Initializing repo...
