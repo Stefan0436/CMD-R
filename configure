@@ -10,9 +10,38 @@ chmod +x set-store-credentials
 chmod +x global-set-cache-credentials
 chmod +x global-set-store-credentials
 chmod +x lib/*
-if [ !  -f ".systeminitializedrepobefore" ]; then
+if [ ! -f ".systeminitializedrepobefore" ] && [ ! "$*" == "--norepoconfig" ] || [ "$*" == "--newrepoconfig" ]; then
     echo Initializing repo...
     ./init-repo
+    echo
+    echo Do you want to set a remote repository destination?
+    echo \(this must be manually configured if no was selected, see repo for more info\)
+    echo Make sure you have writing permissions for the repository.
+    read -p "Do you want to continue [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo Configuring remote repository destination...
+        echo Enter the remote destination url:
+        read giturl
+        git remote add repo $giturl
+    fi
+    echo
+    read -p "Do you want to store git credentials for this repository? (less safe than cache, which wipes on every reboot, select no for caching or nothing) [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo
+        ./set-store-credentials
+    else
+        echo
+        read -p "Do you want to cache git credentials for this repository? (cache wipes after each restart) [Y/n] " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            ./set-cache-credentials
+        fi
+        echo
+    fi
     echo >> .systeminitializedrepobefore
 fi
 echo Checking dependencies...
