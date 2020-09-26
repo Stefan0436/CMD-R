@@ -8,6 +8,8 @@
 
 # CMD-R
 CMD-R is a discord management, scheduling and logging bot.
+<br/>
+<br/>
 
 # Compiling guide
 ## Linux compiling guide
