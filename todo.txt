@@ -4,6 +4,7 @@ Dependency list in readme (including c# libraries and nuget packages, with copyr
 Bot core:
 IMPORTANT: Clean and format README
 IMPORTANT: Reduce string and constructor usage and replace with enums
+IMPORTANT: Add CMD-R Version system (it should through patch numbers, allowing minimal patch version in modules)
 Help command by categories (with multiple pages, start commands with '+')
 Offline status through seperate program
 Run cmd-r in background and control it from a different program
