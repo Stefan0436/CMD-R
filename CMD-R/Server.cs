@@ -12,24 +12,31 @@ namespace CMDR
         public static bool IsAutoSaveActive() { return t != null; }
 
         public static void RunSaveAll()
-        { 
+        {
+            Bot.WriteLine("Saving all servers...");
+            Bot.WriteLine();
             foreach (Server srv in Bot.GetBot().servers)
             {
                 srv.SaveAll();
             }
+            Bot.WriteLine();
+            Bot.WriteLine("Save completed.");
+            _has_changes = false;
         }
 
-        public static void StartAutoSaveHandler()
+        public static void StartAutoSaveThread()
         {
-            if (t != null) throw new Exception("AutoSave is already active, you can not run it twice");
+            if (t != null) throw new Exception("AutoSave is already active, you can not start it twice");
 
             Bot.WriteLine("Starting the autosave system...");
 
             t = new Thread(() => { 
                 while (true)
                 {
-                    if (_has_changes) new Thread(RunSaveAll).Start();
                     Thread.Sleep(AutoSaveMinutes * 60 * 1000);
+                    Bot.WriteLine("Autosave was triggered, checking...");
+                    if (_has_changes) new Thread(RunSaveAll).Start();
+                    else Bot.WriteLine("No changes.");
                 }
             });
 
@@ -38,7 +45,7 @@ namespace CMDR
             Bot.WriteLine("Started the AutoSave system.");
         }
 
-        public static void StopAutoSaveHandler()
+        public static void StopAutoSaveThread()
         {
             if (t == null) throw new Exception("AutoSave is not active, you can not stop it if it is not running");
             Bot.WriteLine("Stopping the autosave system...");
@@ -90,8 +97,11 @@ namespace CMDR
                 {
                     lastname = Bot.GetBot().client.GetGuild(id).Name;
                 }
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
                 catch
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
                 {
+
                 }
 
                 return lastname;
@@ -100,12 +110,30 @@ namespace CMDR
         public List<Role> roles = new List<Role>();
         public void SaveAll()
         {
+            Bot.WriteLine("Saving server, name: '" + name + "', id: '" + id + "'");
             Directory.CreateDirectory(Bot.GetBot().path + "/Server Configs/" + id);
             File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/server.info", name);
-            foreach (Role role in roles)
+            if (!UseChangeSave)
             {
-                SaveRole(role);
+                foreach (FileInfo file in new DirectoryInfo(Bot.GetBot().path + "/Server Configs/" + id).GetFiles("*.role"))
+                {
+                    Role r = Serializer.Deserialize<Role>(File.ReadAllText(file.FullName));
+                    if (roles.Find(t => t.roleid == r.roleid) == null)
+                    {
+                        Bot.WriteLine("  - Deleting role file '" + r.roleid + ".role'...");
+                        if (File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role")) File.Delete(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role");
+                        Bot.WriteLine("  - Deleted role file '" + r.roleid + ".role'");
+                    }
+                }
+
+                foreach (Role role in roles)
+                {
+                    Bot.WriteLine("  - Saving role file '" + role.roleid + ".role'...");
+                    File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + role.roleid + ".role", Serializer.Serialize(role));
+                    Bot.WriteLine("  - Saved role file '" + role.roleid + ".role'.");
+                }
             }
+            Bot.WriteLine("Saved server, name: '" + name + "', id: '" + id + "'");
         }
         public Server(ulong id)
         {
@@ -129,7 +157,7 @@ namespace CMDR
             foreach (FileInfo file in new DirectoryInfo(Bot.GetBot().path + "/Server Configs/" + id).GetFiles("*.role"))
             {
                 Bot.WriteLine();
-                Bot.WriteLine("Loading role file "+file.Name+"...");
+                Bot.WriteLine("Loading role file '"+file.Name+"'...");
                 Role r = Serializer.Deserialize<Role>(File.ReadAllText(file.FullName));
                 Bot.WriteLine("Role loaded, role information:");
                 Bot.WriteLine("    ID = "+r.roleid);
@@ -144,9 +172,26 @@ namespace CMDR
 
         public void SaveRole(Role r, string msg = "Saved")
         {
-            File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role", Serializer.Serialize(r));
+            if (UseChangeSave)
+            {
+                if (roles.Find(t => t.roleid == r.roleid) != null)
+                {
+                    string serialized1 = File.ReadAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role");
+                    string serialized2 = Serializer.Serialize(r);
+                    if (serialized1 == serialized2)
+                    {
+                        Bot.WriteLine("Role file '" + r.roleid + ".role' is exacly the same as the one stored in memory, skipping...");
+                        return;
+                    }
+                }
+            }
+
+            if (UseChangeSave) File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role", Serializer.Serialize(r));
+            else _has_changes = true;
+
+            if (roles.Find(t => t.roleid == r.roleid) == null) roles.Add(r);
             Bot.WriteLine();
-            Bot.WriteLine(msg+" role file '" + r.rolename + "', role information:");
+            Bot.WriteLine(msg+" role file '" + r.roleid + ".role', role information:");
             Bot.WriteLine("    ID = " + r.roleid);
             Bot.WriteLine("    Name = " + r.rolename);
             Bot.WriteLine("    Permissions = " + r.permissions.Count + " permission node" + (r.permissions.Count == 1 ? "" : "s"));
@@ -155,10 +200,13 @@ namespace CMDR
         }
         public void DeleteRole(Role r)
         {
+            if (UseChangeSave) if (File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role")) File.Delete(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role");
+            else _has_changes = true;
+
             if (roles.Find(t => t.roleid == r.roleid) != null) roles.Remove(roles.Find(t => t.roleid == r.roleid));
-            if (File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role")) File.Delete(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role");
             Bot.WriteLine();
-            Bot.WriteLine("Deleted role file '" + r.rolename + "', role information:");
+            if (UseChangeSave) Bot.WriteLine("Deleted role file '" + r.roleid + ".role', role information:");
+            else Bot.WriteLine("Scheduled deletion of role file '" + r.roleid + ".role', role information:");
             Bot.WriteLine("    ID = " + r.roleid);
             Bot.WriteLine("    Name = " + r.rolename);
             Bot.WriteLine("    Permissions = " + r.permissions.Count + " permission node" + (r.permissions.Count == 1 ? "" : "s"));

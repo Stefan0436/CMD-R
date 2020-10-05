@@ -184,7 +184,7 @@ namespace CMDR
             if (File.Exists(path + "/AutoSaveMinutes.save")) Server.AutoSaveMinutes = int.Parse(File.ReadAllLines(path + "/AutoSaveMinutes.save")[0]);
             else File.WriteAllText(path + "/AutoSaveMinutes.save", Server.AutoSaveMinutes.ToString());
             Bot.WriteLine("Set the autosave interval to "+Server.AutoSaveMinutes+" minutes.");
-            Server.StartAutoSaveHandler();
+            Server.StartAutoSaveThread();
 
             Bot.WriteLine();
             Bot.WriteLine("Execute quit or exit to close.");
@@ -202,7 +202,7 @@ namespace CMDR
                     await client.StopAsync();
                     client.Dispose();
                     Server.RunSaveAll();
-                    Server.StopAutoSaveHandler();
+                    Server.StopAutoSaveThread();
                     Environment.Exit(0);
                 }
                 else if (command == "clrgame")
@@ -213,6 +213,46 @@ namespace CMDR
                 {
                     string status = command.Substring("setgame ".Length);
                     await client.SetGameAsync(status);
+                }
+                else if (command.StartsWith("setautosaveinterval ", StringComparison.CurrentCulture))
+                {
+                    string mins = command.Substring("setautosaveinterval ".Length);
+                    try
+                    {
+                        Server.AutoSaveMinutes = int.Parse(mins);
+                        File.WriteAllText(path + "/AutoSaveMinutes.save", Server.AutoSaveMinutes.ToString());
+                        Bot.WriteLine("Saved the autosave interval.");
+                        Bot.WriteLine();
+                        if (Server.IsAutoSaveActive()) Server.StopAutoSaveThread();
+                        Server.StartAutoSaveThread();
+                        Bot.WriteLine();
+                        Bot.WriteLine("Reloaded autosave, autosave interval: " + Server.AutoSaveMinutes + " minutes.");
+                    }
+                    catch
+                    {
+                        Bot.WriteLine("Invalid input");
+                    }
+                }
+                else if (command == "enableautosave")
+                {
+                    if (!Server.IsAutoSaveActive())
+                    {
+                        Server.StartAutoSaveThread();
+                        Bot.WriteLine();
+                        Bot.WriteLine("Enabled autosave, disabled changesave.");
+                        Bot.WriteLine("Autosave interval: " + Server.AutoSaveMinutes + " minutes.");
+                    }
+
+                }
+                else if (command == "disableautosave")
+                {
+                    if (Server.IsAutoSaveActive())
+                    {
+                        Server.StopAutoSaveThread();
+                        Bot.WriteLine();
+                        Bot.WriteLine("Disabled autosave, enabled changesave.");
+                    }
+
                 }
                 else if (command.StartsWith("setstatus ", StringComparison.CurrentCulture))
                 {
@@ -247,7 +287,7 @@ namespace CMDR
                             {
                                 b = Console.ForegroundColor;
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                Bot.WriteLine("[WARNING, MSG CMD] Multiple channels with the same name¸ sending message to "+ client.GetGuild(guild).TextChannels.Count(t => t.Name == channel)+" channels, recommend troubleshooting.");
+                                Bot.WriteLine("[WARNING, MSG CMD] Multiple channels with the same name¸ sending message to " + client.GetGuild(guild).TextChannels.Count(t => t.Name == channel) + " channels, recommend troubleshooting.");
                                 Console.ForegroundColor = b;
                             }
 
@@ -307,6 +347,10 @@ namespace CMDR
                         Bot.WriteLine("Server not set, please run selectserver first.");
                     }
                 }
+                else if (command == "saveall")
+                {
+                    Server.RunSaveAll();
+                }
                 else
                 {
                     bool found = false;
@@ -334,7 +378,7 @@ namespace CMDR
 
                     if (!found)
                     {
-                        Bot.WriteLine("Commands:\nquit - stop bot\nexit - stop bot\nsetgame <game> - set the game name (used often as status)\nclrgame - clear the game setting\nsetstatus <status> - set status (online/offline/invisible/do-not-disturb/idle/afk)\nselectserver - choose a guild (this includes servers)\nmsg <channel> <msg> - send a message to a text channel\nactiveserver - print the active guild name and id");
+                        Bot.WriteLine("Commands:\nquit - stop bot\nexit - stop bot\nsetgame <game> - set the game name (used often as status)\nclrgame - clear the game setting\nsetstatus <status> - set status (online/offline/invisible/do-not-disturb/idle/afk)\nselectserver - choose a guild (this includes servers)\nmsg <channel> <msg> - send a message to a text channel\nactiveserver - print the active guild name and id\nsaveall - save all servers\nsetautosaveinterval <minutes> - set the autosave interval\nenableautosave - enable autosave\ndisableautosave - disable autosave");
                         foreach (SystemCommand cmd in commands)
                         {
                             if (cmd.allowTerminal)
@@ -435,7 +479,9 @@ namespace CMDR
             {
                 srv = new Server(server.Id, server.Name);
                 servers.Add(srv);
-                srv.SaveAll();
+
+                if (Server.UseChangeSave) srv.SaveAll();
+                else Server._has_changes = true;
             }
             else srv = servers.Find(t => t.id == server.Id);
             Bot.WriteLine("Synchronizing role file...");
@@ -444,13 +490,16 @@ namespace CMDR
                 Role r = new Role(socketRole.Name, socketRole.Id);
                 srv.roles.Add(r);
                 r.permissions = new List<string>(DefaultPermissions);
-                srv.SaveRole(r);
+
+                if (Server.UseChangeSave) srv.SaveRole(r);
+                else srv.SaveRole(r, "Scheduled save of");
             }
             else
             {
                 Role r = srv.roles.Find(t => t.roleid == socketRole.Id);
                 r.rolename = socketRole.Name;
-                srv.SaveRole(r, "Updated");
+                if (Server.UseChangeSave) srv.SaveRole(r, "Updated");
+                else srv.SaveRole(r, "Scheduled update of");
             }
         }
 
@@ -461,7 +510,9 @@ namespace CMDR
             {
                 srv = new Server(server.Id, server.Name);
                 servers.Add(srv);
-                srv.SaveAll();
+
+                if (Server.UseChangeSave) srv.SaveAll();
+                else Server._has_changes = true;
             }
             else srv = servers.Find(t => t.id == server.Id);
             Bot.WriteLine("Deleting role file...");
@@ -479,7 +530,9 @@ namespace CMDR
             {
                 srv = new Server(server.Id, server.Name);
                 servers.Add(srv);
-                srv.SaveAll();
+
+                if (Server.UseChangeSave) srv.SaveAll();
+                else Server._has_changes = true;
             }
 
             else srv = servers.Find(t => t.id == server.Id);
@@ -491,13 +544,16 @@ namespace CMDR
                     Role r = new Role(socketRole.Name, socketRole.Id);
                     srv.roles.Add(r);
                     r.permissions = new List<string>(DefaultPermissions);
-                    srv.SaveRole(r);
+
+                    if (Server.UseChangeSave) srv.SaveRole(r);
+                    else srv.SaveRole(r, "Scheduled save of");
                 }
                 else
                 {
                     Role r = srv.roles.Find(t => t.roleid == socketRole.Id);
                     r.rolename = socketRole.Name;
-                    srv.SaveRole(r, "Updated");
+                    if (Server.UseChangeSave) srv.SaveRole(r, "Updated");
+                    else srv.SaveRole(r, "Scheduled update of");
                 }
             }
             foreach (FileInfo file in new DirectoryInfo(Bot.GetBot().path + "/Server Configs/" + srv.id).GetFiles("*.role"))
