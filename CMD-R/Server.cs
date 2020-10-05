@@ -111,6 +111,8 @@ namespace CMDR
         public List<Role> roles = new List<Role>();
         public void SaveAll(bool force =false)
         {
+            if (Bot.GetBot().servers.Find(t => t.id == id) != null && Bot.GetBot().servers.Find(t => t.id == id) != this) Bot.GetBot().servers[Bot.GetBot().servers.IndexOf(Bot.GetBot().servers.Find(t => t.id == id))] = this;
+            
             Bot.WriteLine("Saving server, name: '" + name + "', id: '" + id + "'");
             Directory.CreateDirectory(Bot.GetBot().path + "/Server Configs/" + id);
             File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/server.info", name);
