@@ -42,7 +42,7 @@ namespace CMDR
 
             t.Start();
 
-            Bot.WriteLine("Started the AutoSave system.");
+            Bot.WriteLine("Started the autosave system.");
         }
 
         public static void StopAutoSaveThread()
