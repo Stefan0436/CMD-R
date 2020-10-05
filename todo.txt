@@ -3,10 +3,8 @@ Dependency list in readme (including c# libraries and nuget packages, with copyr
 
 Bot core:
 IMPORTANT: Clean and format README
-IMPORTANT: Replace usage of Application.ExecutablePath with a non-winforms alternative
 IMPORTANT: Reduce string and constructor usage and replace with enums
 IMPORTANT: Auto-save instead of change-save (autosave has a configurable interval)
-IMPORTANT: Prevent empty commands (like just the '+' or '+ <something>')
 Help command by categories (with multiple pages, start commands with '+')
 Offline status
 Run cmd-r in background and control it from a different program

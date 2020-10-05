@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Discord;
 using Discord.WebSocket;
 
@@ -48,7 +47,7 @@ namespace CMDR
             ConsoleColor b = Console.ForegroundColor;
             Console.ForegroundColor = b;
 
-            path = Application.ExecutablePath.Remove(Application.ExecutablePath.LastIndexOf(Path.DirectorySeparatorChar));
+            path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Bot.WriteLine("Booting CMD-R...");
             Bot.WriteLine("AerialWorks CMD-R is Free(Libre) and Open Source Software (FLOSS),\nand will always be licensed under the GPL-2.0 license.");
             Bot.WriteLine("------------------------------------------------------------------");
@@ -413,6 +412,11 @@ namespace CMDR
             SyncRole(server, socketRole);
         }
 
+        public Server GetServerFromSocketGuild(SocketGuild guild)
+        {
+            return servers.Find(t => t.id == guild.Id);
+        }
+
         public void SyncRole(SocketGuild server, SocketRole socketRole)
         {
             Server srv = null;
@@ -511,7 +515,7 @@ namespace CMDR
             var message = msg as SocketUserMessage;
             if (message == null) return;
             SocketTextChannel ch = message.Channel as SocketTextChannel;
-            if (msg.Content.StartsWith("+", StringComparison.CurrentCulture) && ch != null)
+            if (msg.Content.StartsWith("+", StringComparison.CurrentCulture) && ch != null && !msg.Content.StartsWith("+ ", StringComparison.CurrentCulture) && msg.Content != "+")
             {
                 bool found = false;
                 foreach (SystemCommand cmd in commands)
@@ -523,8 +527,8 @@ namespace CMDR
                         string arguments = "";
                         if (fullcmd.Contains(" "))
                         {
-                            arguments = cmdid.Substring(cmdid.IndexOf(" ") + 1);
-                            cmdid = cmdid.Remove(cmdid.IndexOf(" "));
+                            arguments = cmdid.Substring(cmdid.IndexOf(" ", StringComparison.CurrentCulture) + 1);
+                            cmdid = cmdid.Remove(cmdid.IndexOf(" ", StringComparison.CurrentCulture));
                         }
                         
                         if (cmd.commandid.ToLower() == cmdid.ToLower())
