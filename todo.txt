@@ -6,7 +6,7 @@ IMPORTANT: Clean and format README
 IMPORTANT: Reduce string and constructor usage and replace with enums
 IMPORTANT: Auto-save instead of change-save (autosave must have a configurable interval)
 Help command by categories (with multiple pages, start commands with '+')
-Offline status
+Offline status through seperate program
 Run cmd-r in background and control it from a different program
 System reboot command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
 System reboot and update command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
