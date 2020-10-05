@@ -16,7 +16,7 @@ Custom command prefixes
 Branch support in update-cmdr
 Patch file support in update-cmdr
 Custom url support in update-cmdr
-Help system im update-cmdr and help argument
+Help system in update-cmdr and help argument
 
 Module SDK
 Module SDK documentation
