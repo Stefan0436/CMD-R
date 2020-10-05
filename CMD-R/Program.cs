@@ -77,35 +77,7 @@ namespace CMDR
             
             while (client.ConnectionState == ConnectionState.Connecting || client.ConnectionState == ConnectionState.Disconnected) { Thread.Sleep(100); }
             while (client.Guilds.Count == 0 || client.Guilds.FirstOrDefault().Name == null || client.Guilds.FirstOrDefault().Name == "") { Thread.Sleep(100); }
-            Bot.WriteLine("Preparing server config directories...");
-            Directory.CreateDirectory(path + "/Server Configs");
 
-            Bot.WriteLine("Reading default permission list...");
-            if (File.Exists(path + "/permsdefault.cfg")) DefaultPermissions = File.ReadAllLines(path + "/permsdefault.cfg").ToList();
-            else File.WriteAllLines(path + "/permsdefault.cfg", DefaultPermissions);
-            int i2 = 0;
-            foreach (string str in new List<string>(DefaultPermissions))
-            {
-                if (str == "") DefaultPermissions.RemoveAt(i2);
-                i2++;
-            }
-            Bot.WriteLine("Loaded " + DefaultPermissions.Count + " permission node"+(DefaultPermissions.Count == 1 ? "" : "s"));
-
-            Server.LoadAllServers(out servers);
-
-            client.RoleCreated += Client_RoleCreated;
-            client.JoinedGuild += Client_JoinedGuild;
-            client.RoleUpdated += Client_RoleUpdated;
-            client.RoleDeleted += Client_RoleDeleted;
-            client.LeftGuild += Client_LeftGuild;
-
-            Bot.WriteLine("Synchronizing servers attatched to the bot...");
-            foreach (SocketGuild server in client.Guilds)
-            {
-                SyncServer(server);
-            }
-
-            Bot.WriteLine();
             Bot.WriteLine("Loading modules...");
             Bot.WriteLine("Loading build-in modules...");
 
@@ -149,6 +121,36 @@ namespace CMDR
                     }
                 }
             }
+
+            Bot.WriteLine();
+            Bot.WriteLine("Preparing server config directories...");
+            Directory.CreateDirectory(path + "/Server Configs");
+
+            Bot.WriteLine("Reading default permission list...");
+            if (File.Exists(path + "/permsdefault.cfg")) DefaultPermissions = File.ReadAllLines(path + "/permsdefault.cfg").ToList();
+            else File.WriteAllLines(path + "/permsdefault.cfg", DefaultPermissions);
+            int i2 = 0;
+            foreach (string str in new List<string>(DefaultPermissions))
+            {
+                if (str == "") DefaultPermissions.RemoveAt(i2);
+                i2++;
+            }
+            Bot.WriteLine("Loaded " + DefaultPermissions.Count + " permission node"+(DefaultPermissions.Count == 1 ? "" : "s"));
+
+            Server.LoadAllServers(out servers);
+
+            client.RoleCreated += Client_RoleCreated;
+            client.JoinedGuild += Client_JoinedGuild;
+            client.RoleUpdated += Client_RoleUpdated;
+            client.RoleDeleted += Client_RoleDeleted;
+            client.LeftGuild += Client_LeftGuild;
+
+            Bot.WriteLine("Synchronizing servers attatched to the bot...");
+            foreach (SocketGuild server in client.Guilds)
+            {
+                SyncServer(server);
+            }
+
             Bot.WriteLine();
             Bot.WriteLine("Initializing modules...");
 
@@ -201,7 +203,7 @@ namespace CMDR
                     await client.SetStatusAsync(UserStatus.Invisible);
                     await client.StopAsync();
                     client.Dispose();
-                    Server.RunSaveAll();
+                    Server.RunSaveAll(true);
                     Server.StopAutoSaveThread();
                     Environment.Exit(0);
                 }
