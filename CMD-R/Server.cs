@@ -10,14 +10,15 @@ namespace CMDR
     {
         static Thread t = null;
         public static bool IsAutoSaveActive() { return t != null; }
-
-        public static void RunSaveAll()
+        internal bool ___has_changes = false;
+        public static void RunSaveAll() { RunSaveAll(false); }
+        public static void RunSaveAll(bool force)
         {
-            Bot.WriteLine("Saving all servers...");
+            Bot.WriteLine("Saving servers with changes...");
             Bot.WriteLine();
             foreach (Server srv in Bot.GetBot().servers)
             {
-                srv.SaveAll();
+                if (srv.___has_changes || force) srv.SaveAll(force);
             }
             Bot.WriteLine();
             Bot.WriteLine("Save completed.");
@@ -108,7 +109,7 @@ namespace CMDR
             }
         }
         public List<Role> roles = new List<Role>();
-        public void SaveAll()
+        public void SaveAll(bool force =false)
         {
             Bot.WriteLine("Saving server, name: '" + name + "', id: '" + id + "'");
             Directory.CreateDirectory(Bot.GetBot().path + "/Server Configs/" + id);
@@ -128,9 +129,13 @@ namespace CMDR
 
                 foreach (Role role in roles)
                 {
-                    Bot.WriteLine("  - Saving role file '" + role.roleid + ".role'...");
-                    File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + role.roleid + ".role", Serializer.Serialize(role));
-                    Bot.WriteLine("  - Saved role file '" + role.roleid + ".role'.");
+                    if (role.___has_changes || force)
+                    {
+                        Bot.WriteLine("  - Saving role file '" + role.roleid + ".role'...");
+                        File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + role.roleid + ".role", Serializer.Serialize(role));
+                        Bot.WriteLine("  - Saved role file '" + role.roleid + ".role'.");
+                        role.___has_changes = false;
+                    }
                 }
             }
             Bot.WriteLine("Saved server, name: '" + name + "', id: '" + id + "'");
@@ -150,7 +155,7 @@ namespace CMDR
         public void LoadAll()
         {
             Directory.CreateDirectory(Bot.GetBot().path + "/Server Configs/" + id);
-            if (!File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/server.info")) SaveAll();
+            if (!File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/server.info")) SaveAll(true);
 
             roles.Clear();
             Bot.WriteLine("Loading roles of server " + name + " (" + id + ")");
@@ -159,6 +164,7 @@ namespace CMDR
                 Bot.WriteLine();
                 Bot.WriteLine("Loading role file '"+file.Name+"'...");
                 Role r = Serializer.Deserialize<Role>(File.ReadAllText(file.FullName));
+                r.___has_changes = false;
                 Bot.WriteLine("Role loaded, role information:");
                 Bot.WriteLine("    ID = "+r.roleid);
                 Bot.WriteLine("    Name = " + r.rolename);
@@ -187,9 +193,13 @@ namespace CMDR
             }
 
             if (UseChangeSave) File.WriteAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role", Serializer.Serialize(r));
-            else _has_changes = true;
+            else { _has_changes = true; r.___has_changes = true; }
 
             if (roles.Find(t => t.roleid == r.roleid) == null) roles.Add(r);
+            else if (roles.Find(t => t.roleid == r.roleid) != r) roles[roles.IndexOf(roles.Find(t => t.roleid == r.roleid))] = r;
+
+            if (Bot.GetBot().servers.Find(t => t.id == id) != null && Bot.GetBot().servers.Find(t => t.id == id) != this) Bot.GetBot().servers[Bot.GetBot().servers.IndexOf(Bot.GetBot().servers.Find(t => t.id == id))] = this;
+
             Bot.WriteLine();
             Bot.WriteLine(msg+" role file '" + r.roleid + ".role', role information:");
             Bot.WriteLine("    ID = " + r.roleid);
@@ -197,6 +207,8 @@ namespace CMDR
             Bot.WriteLine("    Permissions = " + r.permissions.Count + " permission node" + (r.permissions.Count == 1 ? "" : "s"));
             Bot.WriteLine("    Blacklisted Permissions = " + r.permissionsblacklist.Count + " permission node" + (r.permissionsblacklist.Count == 1 ? "" : "s"));
             Bot.WriteLine();
+
+            ___has_changes = true;
         }
         public void DeleteRole(Role r)
         {
@@ -212,11 +224,14 @@ namespace CMDR
             Bot.WriteLine("    Permissions = " + r.permissions.Count + " permission node" + (r.permissions.Count == 1 ? "" : "s"));
             Bot.WriteLine("    Blacklisted Permissions = " + r.permissionsblacklist.Count + " permission node" + (r.permissionsblacklist.Count == 1 ? "" : "s"));
             Bot.WriteLine();
+
+            ___has_changes = true;
         }
     }
 
     public class Role
     {
+        internal bool ___has_changes = false;
         Role()
         {
 

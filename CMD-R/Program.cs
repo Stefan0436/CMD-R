@@ -349,7 +349,7 @@ namespace CMDR
                 }
                 else if (command == "saveall")
                 {
-                    Server.RunSaveAll();
+                    Server.RunSaveAll(true);
                 }
                 else
                 {
@@ -364,8 +364,8 @@ namespace CMDR
                             string arguments = "";
                             if (fullcmd.Contains(" "))
                             {
-                                arguments = cmdid.Substring(cmdid.IndexOf(" ") + 1);
-                                cmdid = cmdid.Remove(cmdid.IndexOf(" "));
+                                arguments = cmdid.Substring(cmdid.IndexOf(" ", StringComparison.CurrentCulture) + 1);
+                                cmdid = cmdid.Remove(cmdid.IndexOf(" ", StringComparison.CurrentCulture));
                             }
 
                             if (cmd.commandid.ToLower() == cmdid.ToLower())
@@ -440,7 +440,9 @@ namespace CMDR
                     {
                         Directory.Delete(path + "/Server Configs/" + id, true);
                     }
+#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
                     catch
+#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
                     {
 
                     }
@@ -481,7 +483,7 @@ namespace CMDR
                 servers.Add(srv);
 
                 if (Server.UseChangeSave) srv.SaveAll();
-                else Server._has_changes = true;
+                else { srv.___has_changes = true; Server._has_changes = true; }
             }
             else srv = servers.Find(t => t.id == server.Id);
             Bot.WriteLine("Synchronizing role file...");
@@ -512,7 +514,7 @@ namespace CMDR
                 servers.Add(srv);
 
                 if (Server.UseChangeSave) srv.SaveAll();
-                else Server._has_changes = true;
+                else { srv.___has_changes = true; Server._has_changes = true; }
             }
             else srv = servers.Find(t => t.id == server.Id);
             Bot.WriteLine("Deleting role file...");
@@ -532,7 +534,7 @@ namespace CMDR
                 servers.Add(srv);
 
                 if (Server.UseChangeSave) srv.SaveAll();
-                else Server._has_changes = true;
+                else { srv.___has_changes = true; Server._has_changes = true; }
             }
 
             else srv = servers.Find(t => t.id == server.Id);
