@@ -176,11 +176,20 @@ namespace CMDR
             Bot.WriteLine();
             Bot.WriteLine("Module loading completed. " + modules.Count + " modules loaded.");
 
+
+            Bot.WriteLine("Switching to auto-save instead of change-save...");
+            Server.UseChangeSave = false;
+            Bot.WriteLine();
+            Bot.WriteLine("Loading autosave config: " + path + Path.DirectorySeparatorChar+ "AutoSaveMinutes.save...");
+            if (File.Exists(path + "/AutoSaveMinutes.save")) Server.AutoSaveMinutes = int.Parse(File.ReadAllLines(path + "/AutoSaveMinutes.save")[0]);
+            else File.WriteAllText(path + "/AutoSaveMinutes.save", Server.AutoSaveMinutes.ToString());
+            Bot.WriteLine("Set the autosave interval to "+Server.AutoSaveMinutes+" minutes.");
+            Server.StartAutoSaveHandler();
+
             Bot.WriteLine();
             Bot.WriteLine("Execute quit or exit to close.");
 
             client.MessageReceived += onMessage;
-
             await client.SetGameAsync("");
             while (true)
             {
@@ -192,6 +201,8 @@ namespace CMDR
                     await client.SetStatusAsync(UserStatus.Invisible);
                     await client.StopAsync();
                     client.Dispose();
+                    Server.RunSaveAll();
+                    Server.StopAutoSaveHandler();
                     Environment.Exit(0);
                 }
                 else if (command == "clrgame")

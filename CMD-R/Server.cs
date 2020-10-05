@@ -1,12 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Discord.WebSocket;
 
 namespace CMDR
 {
     public class Server
     {
+        static Thread t = null;
+        public static bool IsAutoSaveActive() { return t != null; }
+
+        public static void RunSaveAll()
+        { 
+            foreach (Server srv in Bot.GetBot().servers)
+            {
+                srv.SaveAll();
+            }
+        }
+
+        public static void StartAutoSaveHandler()
+        {
+            if (t != null) throw new Exception("AutoSave is already active, you can not run it twice");
+
+            Bot.WriteLine("Starting the autosave system...");
+
+            t = new Thread(() => { 
+                while (true)
+                {
+                    if (_has_changes) new Thread(RunSaveAll).Start();
+                    Thread.Sleep(AutoSaveMinutes * 60 * 1000);
+                }
+            });
+
+            t.Start();
+
+            Bot.WriteLine("Started the AutoSave system.");
+        }
+
+        public static void StopAutoSaveHandler()
+        {
+            if (t == null) throw new Exception("AutoSave is not active, you can not stop it if it is not running");
+            Bot.WriteLine("Stopping the autosave system...");
+            t.Abort();
+            t = null;
+            Bot.WriteLine("Stopped the autosave system.");
+        }
+
+        public static bool UseChangeSave = true;
+        public static int AutoSaveMinutes = 60;
+        public static bool _has_changes = false;
+
         public static void LoadAllServers(out List<Server> servers)
         {
             servers = new List<Server>();
