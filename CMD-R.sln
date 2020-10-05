@@ -20,6 +20,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{76F26F8A-1839-4D61-94EA-0AD9792BE33F}"
 	ProjectSection(SolutionItems) = preProject
 		lib\Start CMD-R = lib\Start CMD-R
+		lib\cmd-r = lib\cmd-r
+		lib\do-install-c.sh = lib\do-install-c.sh
+		lib\do-uninstall-c.sh = lib\do-uninstall-c.sh
+		lib\install.sh = lib\install.sh
+		lib\install-c.sh = lib\install-c.sh
+		lib\uninstall.sh = lib\uninstall.sh
+		lib\uninstall-c.sh = lib\uninstall-c.sh
+		lib\Update and start CMD-R.sh = lib\Update and start CMD-R.sh
+		lib\update-cmdr = lib\update-cmdr
+		lib\Update CMD-R.sh = lib\Update CMD-R.sh
 	EndProjectSection
 EndProject
 Global
