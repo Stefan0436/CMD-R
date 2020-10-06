@@ -13,7 +13,7 @@ CMD-R is a discord management, scheduling and logging bot.
 
 # Compiling guide
 ## Linux compiling guide
-1.  Clone the git using the command `git clone https://github.com/Stefan0436/CMD-R.git`
+1.  Clone the git repository using the command `git clone https://github.com/Stefan0436/CMD-R.git`
 2.  Enter the cloned repo by running `cd CMD-R`
 3.  Mark `configure` as executable by running `chmod +x ./configure`
 4.  Configure the project and download C# dependencies by running `./configure`
