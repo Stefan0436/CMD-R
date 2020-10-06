@@ -22,6 +22,7 @@ Module SDK
 Module SDK documentation
 
 Bot features (each feature needs its own module):
+Command to show which users have a specific role (permission can be set by the admin)
 Nickname change detection, per channel
 Timers
 Silent timers (single line)
