@@ -16,6 +16,8 @@ System reboot command (requires console-given permission, requires reboot script
 System reboot and update command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
 DM Message support
 Custom command prefixes
+Better logo for CMD-R Official
+Invite link for the official on github? (not sure, the server hosting the official version is quite bad, i don't think it can take much more)
 
 Branch support in update-cmdr
 Patch file support in update-cmdr
