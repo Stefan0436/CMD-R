@@ -1,11 +1,13 @@
-﻿IMPORTANT:
+﻿TODO List:
+
+IMPORTANT:
 Dependency list in readme (including c# libraries and nuget packages, with copyright notice)
 
 Bot core:
 IMPORTANT: Clean and format README
 IMPORTANT: Reduce string and constructor usage and replace with enums
 IMPORTANT: Add CMD-R Version system (it should work with patch numbers, allowing minimal patch version in modules, howerver, the patch class should also have a version identity string)
-Help command by categories (with multiple pages, start commands with '+')
+Help command, list commands in categories (with multiple pages, start commands with '+')
 Offline status through seperate program
 Run cmd-r in background and control it from a different program
 System reboot command (requires console-given permission, requires reboot script, intergrates into the start shell script, can only be used when started from the shell script)
