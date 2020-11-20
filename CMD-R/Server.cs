@@ -184,7 +184,7 @@ namespace CMDR
             {
                 if (roles.Find(t => t.roleid == r.roleid) != null)
                 {
-                    string serialized1 = File.ReadAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role");
+                    string serialized1 = (File.Exists(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role")?File.ReadAllText(Bot.GetBot().path + "/Server Configs/" + id + "/" + r.roleid + ".role"):"");
                     string serialized2 = Serializer.Serialize(r);
                     if (serialized1 == serialized2)
                     {
