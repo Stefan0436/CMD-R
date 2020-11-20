@@ -71,6 +71,7 @@ It looks like you entered a invalid token, delete the token config by running th
 ## Guide for module development
 Coming soon
 <br/>
+<br/>
 # Other guides
 
 ### Updating an installed version
