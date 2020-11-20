@@ -23,8 +23,6 @@ CMD-R is a discord management, scheduling and logging bot.
 6.  Run the bot inside the build folder by running `make run`
 7.  Install the bot to your system by running `make install` so you can run it with `cmd-r`
 
-<br/>
-
 ## Windows compiling guide
 Coming soon.
 <br/>
