@@ -28,6 +28,7 @@ CMD-R is a discord management, scheduling and logging bot.
 ## Windows compiling guide
 Coming soon.
 <br/>
+<br/>
 
 ## Guide to get a discord bot token
 1.  Head over to https://discord.com/developers/applications/
