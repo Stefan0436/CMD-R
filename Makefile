@@ -19,9 +19,7 @@
 	@echo Optionally, run \'make install\' to install the bot into your system.
 run:
 	@echo Starting CMD-R...
-	@cd build
-	@./cmd-r
-	@cd ..
+	@(cd build; ./cmd-r)
 install:
 	@echo Installing CMD-R to system...
 	@lib/install.sh
