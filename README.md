@@ -124,9 +124,11 @@ make uninstall-no-requests
 ## Common problems
 
 ### I am a collaborator and i get the following error: `fatal: 'repo' does not appear to be a git repository`
-You seem to be missing the destination repository, to fix this, run: `git remote add repo <your repo url>` (replace <your repo url>) in your locally cloned repository
+You seem to be missing the destination repository, to fix this, run the following command in your locally cloned repo:<br/>
+`git remote add repo <your repo url>`<br/>(replace `'<your repo url>'` with an upstream url, we prefer you fork the repo and enter your fork's url)
 <br/>
 <br/>
+
 ### I keep needing my credentials, how do store them on my drive?
 To do this, you only need to run a command, you can choose between the following:
 1. Save in plain text file (less safe, anyone can read your password once they are logged in):<br/>`git config --global credential.helper 'store'`<br/>
