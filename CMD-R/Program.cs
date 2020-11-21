@@ -53,7 +53,7 @@ namespace CMDR
                 {
                     debugenabled=true;
                     debugbreach=false;
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Bot.WriteLine("--{=-- POSSIBLE SECURITY RISK --=}-- ==>>>  Debug Enabled, ASMLD Unlocked.");
                     Console.ForegroundColor = b;
                 }
@@ -66,16 +66,16 @@ namespace CMDR
                     Console.WriteLine("--{----- POSSIBLE SECURITY RISK -----}--");
                     Console.ForegroundColor = b;
                 }
-                else if (argument.StartsWith("ASMLD:{") && debugenabled)
+                else if (argument.StartsWith("ASMLD:{", StringComparison.CurrentCulture) && debugenabled)
                 {
                     string path = argument.Substring("ASMLD:{".Length);
-                    path = path.Remove(path.IndexOf("}"));
+                    path = path.Remove(path.IndexOf("}", StringComparison.CurrentCulture));
                     if (!File.Exists(path) && File.Exists(path + "/" + Path.GetFileName(path) + ".dll"))
                     {
                         path = path + Path.DirectorySeparatorChar + Path.GetFileName(path);
                     }
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Embed Assembly: " + path);
+                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Embed Assembly: " + Path.GetFileName(path));
                     AppDomain currentDomain = AppDomain.CurrentDomain;
                     currentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
 
@@ -87,13 +87,13 @@ namespace CMDR
                         Console.ForegroundColor = ConsoleColor.Red;
                         Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Load DLL Reference: " + assemblyPath);
                         Assembly assembly = Assembly.LoadFrom(assemblyPath);
-                        Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Loaded Assembly: " + assembly.GetName() + " (" + assembly.GetTypes().Count() + " Type(s) Loaded)");
+                        Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Loaded Assembly: " + assembly.GetName().Name + " (" + assembly.GetTypes().Count() + " Type(s) Loaded)");
                         Console.ForegroundColor = b;
                         return assembly;
                     }
 
                     Assembly asm = Assembly.LoadFrom(path);
-                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Loaded Assembly: " + asm.GetName() + " (" + asm.GetTypes().Count() + " Type(s) Loaded)");
+                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Loaded Assembly: " + asm.GetName().Name + " (" + asm.GetTypes().Count() + " Type(s) Loaded)");
                     Console.ForegroundColor = b;
                 }
             }
