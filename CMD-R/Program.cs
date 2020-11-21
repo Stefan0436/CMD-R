@@ -61,9 +61,9 @@ namespace CMDR
                 {
                     debugenabled=false;
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("--{=-- DEBUG SYSTEM DISABLED --=}-- ==>>>  Debug Disabled, ASMLD Locked, ");
+                    Console.Write("--{=-- DEBUG SYSTEM DISABLED --=}-- ==>>>  Debug Disabled, ASMLD Locked.");
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("--{----- POSSIBLE SECURITY RISK -----}--");
+                    Console.WriteLine(" [ WARNING: POSSIBLE SECURITY RISK ]");
                     Console.ForegroundColor = b;
                 }
                 else if (argument.StartsWith("ASMLD:{", StringComparison.CurrentCulture) && debugenabled)
