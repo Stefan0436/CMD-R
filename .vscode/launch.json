@@ -7,6 +7,7 @@
         {
             "name": "Launch CMD-R",
             "type": "mono",
+            "preLaunchTask": "build",
             "request": "launch",
             "program": "${workspaceRoot}/CMD-R/bin/Debug/CMD-R.exe",
             "console": "integratedTerminal",

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using System.IO.Compression;
 
 namespace CMDR
 {
@@ -37,8 +39,66 @@ namespace CMDR
         public string path;
         public ulong guild = 0;
         public DiscordSocketClient client;
+        static bool debugenabled = false;
+        static bool debugbreach = false;
+        public static bool GetDebug() => debugenabled;
+        public static bool GetDebugEnabledBefore() => debugbreach;
         public static void Main(string[] args)
-        => new Bot().MainAsync().GetAwaiter().GetResult();
+        {
+            ConsoleColor b = Console.ForegroundColor;
+            Console.ForegroundColor = b;
+            foreach (string argument in args)
+            {
+                if (argument == "--enable-debug" && !debugenabled)
+                {
+                    debugenabled=true;
+                    debugbreach=false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Bot.WriteLine("--{=-- POSSIBLE SECURITY RISK --=}-- ==>>>  Debug Enabled, ASMLD Unlocked.");
+                    Console.ForegroundColor = b;
+                }
+                else if (argument == "--disable-debug" && debugenabled)
+                {
+                    debugenabled=false;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("--{=-- DEBUG SYSTEM DISABLED --=}-- ==>>>  Debug Disabled, ASMLD Locked, ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("--{----- POSSIBLE SECURITY RISK -----}--");
+                    Console.ForegroundColor = b;
+                }
+                else if (argument.StartsWith("ASMLD:{") && debugenabled)
+                {
+                    string path = argument.Substring("ASMLD:{".Length);
+                    path = path.Remove(path.IndexOf("}"));
+                    if (!File.Exists(path) && File.Exists(path + "/" + Path.GetFileName(path) + ".dll"))
+                    {
+                        path = path + Path.DirectorySeparatorChar + Path.GetFileName(path);
+                    }
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Embed Assembly: " + path);
+                    AppDomain currentDomain = AppDomain.CurrentDomain;
+                    currentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
+
+                    Assembly LoadFromSameFolder(object sender, ResolveEventArgs args2)
+                    {
+                        string assemblyPath = Path.Combine(Path.GetDirectoryName(path), new AssemblyName(args2.Name).Name + ".dll");
+                        if (!File.Exists(assemblyPath)) return null;
+                        b = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Load DLL Reference: " + assemblyPath);
+                        Assembly assembly = Assembly.LoadFrom(assemblyPath);
+                        Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Loaded Assembly: " + assembly.GetName() + " (" + assembly.GetTypes().Count() + " Type(s) Loaded)");
+                        Console.ForegroundColor = b;
+                        return assembly;
+                    }
+
+                    Assembly asm = Assembly.LoadFrom(path);
+                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Loaded Assembly: " + asm.GetName() + " (" + asm.GetTypes().Count() + " Type(s) Loaded)");
+                    Console.ForegroundColor = b;
+                }
+            }
+            new Bot().MainAsync().GetAwaiter().GetResult();
+        }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task MainAsync()
@@ -54,6 +114,8 @@ namespace CMDR
             Bot.WriteLine();
             Bot.WriteLine("System path: " + path);
             Directory.CreateDirectory(path + "/Modules");
+            Directory.CreateDirectory(path + "/Module Packages");
+            Directory.CreateDirectory(path + "/Embedded Modules");
 
             Bot.WriteLine();
             Bot.WriteLine("Loading token...");
@@ -74,52 +136,173 @@ namespace CMDR
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
             await client.SetGameAsync("Starting CMD-R...");
-            
+
             while (client.ConnectionState == ConnectionState.Connecting || client.ConnectionState == ConnectionState.Disconnected) { Thread.Sleep(100); }
             while (client.Guilds.Count == 0 || client.Guilds.FirstOrDefault().Name == null || client.Guilds.FirstOrDefault().Name == "") { Thread.Sleep(100); }
 
             Bot.WriteLine("Loading modules...");
-            Bot.WriteLine("Loading build-in modules...");
-
-            foreach (Type module in Assembly.GetExecutingAssembly().GetTypes())
+            Bot.WriteLine("Loading embedded/injected modules...");
+            foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (module.BaseType == typeof(BotModule))
+                foreach (Type module in asm.GetTypes())
                 {
-                    Bot.WriteLine("Loading module class: " + module.Name);
-                    var script = Activator.CreateInstance(module) as BotModule;
-                    Bot.WriteLine("Loading module: " + script.id + "...");
-                    Bot.WriteLine("Module description: " + script.moduledesctiption);
-                    modules.Add(script);
-                    Bot.WriteLine("Pre-initializing module: " + script.id + "...");
-                    script.PreInit(this);
-                    Bot.WriteLine("Loaded module: " + script.id + "...");
+                    if (module.BaseType == typeof(BotModule))
+                    {
+                        Bot.WriteLine("Loading module class: " + module.Name);
+                        var script = Activator.CreateInstance(module) as BotModule;
+                        Bot.WriteLine("Loading module: " + script.id + "...");
+                        Bot.WriteLine("Module description: " + script.moduledesctiption);
+                        modules.Add(script);
+                        Directory.CreateDirectory(path + "/Embedded Modules/" + script.id);
+                        script.modulepath = "ASM:{" + module.FullName + "}";
+                        script.storagepath = path + "/Embedded Modules/" + script.id;
+                        if (!File.Exists(Bot.GetBot().path + "/Embedded Modules/" + script.id + "/Storage/config.ccfg") && File.Exists(Path.GetDirectoryName(module.Assembly.Location)+"/config-defaults.ccfg") && module.Assembly.FullName != Assembly.GetCallingAssembly().FullName)
+                        {
+                            File.Copy(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.ccfg", Bot.GetBot().path + "/Embedded Modules/" + script.id + "/Storage/config.ccfg");
+                        }
+                        script.LoadConfig();
+                        script.SaveConfig();
+                        Bot.WriteLine("Pre-initializing module: " + script.id + "...");
+                        script.PreInit(this);
+                        Bot.WriteLine("Loaded module: " + script.id + "...");
+                    }
                 }
             }
+
             Bot.WriteLine();
             Bot.WriteLine("Loading modules from the Modules directory...");
             foreach (DirectoryInfo info in new DirectoryInfo(path + "/Modules").GetDirectories())
             {
                 if (File.Exists(info.FullName + "/" + info.Name + ".dll"))
                 {
-                    Bot.WriteLine("Loading module file: " + info.FullName + "/" + info.Name + ".dll");
-                    Assembly asm = Assembly.LoadFrom(info.FullName + "/" + info.Name + ".dll");
-                    Type type = asm.GetType(info.Name + "." + info.Name);
-                    var script = Activator.CreateInstance(type) as BotModule;
+                    LoadBotModule(info.Name, info.FullName);
+                }
+                else
+                {
+                    b = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Bot.WriteLine(" -- WARNING -- ==>>> Bot module folder '" + info.Name + "' has no valid module file, no files match the folder name.");
+                    Console.ForegroundColor = b;
+                }
+            }
+            Bot.WriteLine("Loading modules from the packages...");
+            foreach (FileInfo info in new DirectoryInfo(path + "/Module Packages").GetFiles("*.cpkg"))
+            {
+                bool update = false;
 
-                    if (script == null)
+                if (!Directory.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName))) update = true; // Make sure the package gets extracted if new
+                else
+                {
+                    // Check if package archive is newer than extracted version
+                    string oldpatch = (File.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/patch.ver") ? File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/patch.ver") : "");
+                    // If the patch.ver file does not exist, the string is empty
+
+                    string newpatch = "";
+
+                    // Read the archive for getting the new version file, skip if patch.ver is not in the archive
+                    ZipArchive file = ZipFile.OpenRead(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
+                    if (file.Entries.ToList().Find(t => t.Name == "patch.ver") != null)
                     {
-                        Bot.WriteLine("Module file: '" + info.FullName + "/" + info.Name + ".dll' does not have a class named " + info.Name + " in a namespace named " + info.Name + ", cannot load it, skipping...");
+                        try
+                        {
+                            StreamReader r = new StreamReader(file.Entries.ToList().Find(t => t.Name == "patch.ver").Open());
+                            newpatch = r.ReadLine();
+                            r.Close();
+                        }
+                        catch
+                        {
+
+                        }
                     }
-                    else
+
+                    int newv = 0;
+                    int oldv = 0;
+
+                    // Parse if the strings are not empty
+                    if (newpatch != "") newv = int.Parse(newpatch);
+                    if (oldpatch != "") oldv = int.Parse(oldpatch);
+
+                    update = (oldv < newv); // Check if the archive is newer than the folder
+                }
+
+                // Extract files if new/updated
+                if (update)
+                {
+                    if (Directory.Exists(path + "/temp"))
                     {
-                        Bot.WriteLine("Loading module: " + script.id + "...");
-                        Bot.WriteLine("Module description: " + script.moduledesctiption);
-                        modules.Add(script);
-                        Bot.WriteLine("Pre-initializing module: " + script.id + "...");
-                        script.PreInit(this);
-                        Bot.WriteLine("Loaded module: " + script.id + "...");
+                        Bot.WriteLine("Removing existing temp folder...");
+                        try
+                        {
+                            Directory.Delete(path + "/temp");
+                        }
+                        catch
+                        {
+                            Directory.Delete(path + "/temp", true);
+                        }
+                    }
+                    Bot.WriteLine("Install module package: " + info.FullName);
+                    Bot.WriteLine("Extracting package to temp...");
+                    ZipFile.ExtractToDirectory(info.FullName, path + "/temp");
+                    Bot.WriteLine("Preparing update...");
+                    if (Directory.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/Storage"))
+                    {
+                        Bot.WriteLine("Moving existing storage folder...");
+                        Directory.Move(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/Storage", path + "/temp/Storage");
+                    }
+                    try
+                    {
+                        Bot.WriteLine("Installing package...");
+                        try
+                        {
+                            Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
+                        }
+                        catch
+                        {
+                            Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName), true);
+                        }
+                        Directory.Move(path + "/temp", path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
+                        Bot.WriteLine("Package file " + info.Name + " has been installed.");
+                    }
+                    catch (Exception e)
+                    {
+                        Directory.CreateDirectory(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
+                        Bot.WriteLine("Installation failed, moving module storage back to install folder and exiting...");
+                        if (Directory.Exists(Path.GetFileNameWithoutExtension(info.FullName) + "/Storage"))
+                        {
+                            b = Console.ForegroundColor;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Bot.WriteLine("CRITICAL ERROR: Unable to restore or save storage folder, one already exists in both temp and install output!");
+                            Bot.WriteLine("DO NOT RESTART CMD-R BEFORE FIXING THIS ERROR OR FILES WILL GET LOST!");
+                            Console.ForegroundColor = b;
+                            throw new FieldAccessException("Unable to move storage back to origin, already exists, consider CMD-R crashed.");
+                        }
+                        if (Directory.Exists(path + "/temp/Storage"))
+                        {
+                            Directory.Move(path + "/temp/Storage", path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/Storage");
+                        }
+
+                        throw e;
                     }
                 }
+
+                if (!File.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets") ||
+                    Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default") == null ||
+                    !Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default").ContainsKey("FileName") ||
+                    !Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default").ContainsKey("ClassName") ||
+                    !Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default").ContainsKey("Namespace")
+                )
+                {
+                    b = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Bot.WriteLine(" -- WARNING -- ==>>> Extracted bot module package '" + info.Name + "' does not contain a valid pointer file, unable to load it.");
+                    Console.ForegroundColor = b;
+                }
+                Config c = Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets"));
+                LoadBotModule(c.GetMap("Default")["FileName"],
+                    path + Path.DirectorySeparatorChar + "Module Packages" + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(info.FullName),
+                    c.GetMap("Default")["ClassName"],
+                    c.GetMap("Default")["Namespace"]
+                );
             }
 
             Bot.WriteLine();
@@ -135,7 +318,7 @@ namespace CMDR
                 if (str == "") DefaultPermissions.RemoveAt(i2);
                 i2++;
             }
-            Bot.WriteLine("Loaded " + DefaultPermissions.Count + " permission node"+(DefaultPermissions.Count == 1 ? "" : "s"));
+            Bot.WriteLine("Loaded " + DefaultPermissions.Count + " permission node" + (DefaultPermissions.Count == 1 ? "" : "s"));
 
             Server.LoadAllServers(out servers);
 
@@ -182,10 +365,10 @@ namespace CMDR
             Bot.WriteLine("Switching to auto-save instead of change-save...");
             Server.UseChangeSave = false;
             Bot.WriteLine();
-            Bot.WriteLine("Loading autosave config: " + path + Path.DirectorySeparatorChar+ "AutoSaveMinutes.save...");
+            Bot.WriteLine("Loading autosave config: " + path + Path.DirectorySeparatorChar + "AutoSaveMinutes.save...");
             if (File.Exists(path + "/AutoSaveMinutes.save")) Server.AutoSaveMinutes = int.Parse(File.ReadAllLines(path + "/AutoSaveMinutes.save")[0]);
             else File.WriteAllText(path + "/AutoSaveMinutes.save", Server.AutoSaveMinutes.ToString());
-            Bot.WriteLine("Set the autosave interval to "+Server.AutoSaveMinutes+" minutes.");
+            Bot.WriteLine("Set the autosave interval to " + Server.AutoSaveMinutes + " minutes.");
             Server.StartAutoSaveThread();
 
             Bot.WriteLine();
@@ -195,7 +378,7 @@ namespace CMDR
             await client.SetGameAsync("");
             while (true)
             {
-                string command = Terminal.ReadLine().Replace("\0","");
+                string command = Terminal.ReadLine().Replace("\0", "");
                 if (command == "quit" || command == "exit")
                 {
                     await client.SetGameAsync("Shutting down...");
@@ -394,11 +577,57 @@ namespace CMDR
             }
         }
 
+        public static void LoadBotModule(string filename, string filefolder, string classname = "{auto}", string namespacepath = "{auto}")
+        {
+            if (classname == "{auto}") classname = filename;
+            if (namespacepath == "{auto}") namespacepath = filename;
+            Bot.WriteLine("Loading module file: " + filefolder + Path.DirectorySeparatorChar + filename + ".dll");
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
+
+            Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
+            {
+                string assemblyPath = Path.Combine(filefolder, new AssemblyName(args.Name).Name + ".dll");
+                if (!File.Exists(assemblyPath)) return null;
+                Bot.WriteLine("Loading DLL Assembly: " + assemblyPath);
+                Assembly assembly = Assembly.LoadFrom(assemblyPath);
+                return assembly;
+            }
+            Assembly asm = Assembly.LoadFrom(filefolder + Path.DirectorySeparatorChar + filename + ".dll");
+            Type type = asm.GetType(namespacepath + "." + classname);
+
+            var script = Activator.CreateInstance(type) as BotModule;
+
+            if (script == null)
+            {
+                Bot.WriteLine("Module file: '" + filefolder + Path.DirectorySeparatorChar + filename + ".dll' does not have a class named " + classname + " in a namespace named " + namespacepath + ", cannot load it, skipping...");
+            }
+            else
+            {
+
+                Bot.WriteLine("Loading module: " + script.id + "...");
+                Bot.WriteLine("Module description: " + script.moduledesctiption);
+                Bot.GetBot().modules.Add(script);
+                Directory.CreateDirectory(Bot.GetBot().path + "/Modules/" + script.id + "/Storage");
+                if (!File.Exists(Bot.GetBot().path + "/Modules/" + script.id + "/Storage/config.ccfg") && File.Exists(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.ccfg"))
+                {
+                    File.Copy(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.ccfg", Bot.GetBot().path + "/Modules/" + script.id + "/Storage/config.ccfg");
+                }
+                script.modulepath = Path.GetFullPath(filefolder + Path.DirectorySeparatorChar + filename + ".dll");
+                script.storagepath = Path.GetFullPath(Bot.GetBot().path + Path.DirectorySeparatorChar + "Modules" + Path.DirectorySeparatorChar + script.id + Path.DirectorySeparatorChar + "Storage");
+                script.LoadConfig();
+                script.SaveConfig();
+                Bot.WriteLine("Pre-initializing module: " + script.id + "...");
+                script.PreInit(Bot.GetBot());
+                Bot.WriteLine("Loaded module: " + script.id + "...");
+            }
+        }
+
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async Task Client_RoleDeleted(SocketRole arg)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            DeleteRole(arg.Guild,arg);
+            DeleteRole(arg.Guild, arg);
         }
 
 
@@ -601,7 +830,7 @@ namespace CMDR
                             arguments = cmdid.Substring(cmdid.IndexOf(" ", StringComparison.CurrentCulture) + 1);
                             cmdid = cmdid.Remove(cmdid.IndexOf(" ", StringComparison.CurrentCulture));
                         }
-                        
+
                         if (cmd.commandid.ToLower() == cmdid.ToLower())
                         {
                             found = true;
@@ -639,7 +868,7 @@ namespace CMDR
             {
                 Task<Discord.Rest.RestUserMessage> t = channel.SendMessageAsync(message);
                 await t;
-                await Task.Delay(durationsec*1000);
+                await Task.Delay(durationsec * 1000);
                 try
                 {
                     await t.GetAwaiter().GetResult().DeleteAsync();

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+
 namespace CMDR
 {
     public abstract class BotModule
@@ -34,7 +36,26 @@ namespace CMDR
             GetBot().commands.Add(command);
         }
 
-        public static string modulepath = "";
+        public string modulepath = "";
+        public string storagepath = "";
+
+        internal Config botconfig;
+        public Config GetConfig() => botconfig;
+
+        public void SaveConfig()
+        {
+            File.WriteAllText(storagepath+"/config.ccfg", GetConfig().ToString());
+        }
+
+        public void LoadConfig() 
+        {
+            if (File.Exists(storagepath+"/config.ccfg"))
+            {
+                botconfig = Config.FromString(File.ReadAllText(storagepath+"/config.ccfg"));
+            }
+            else botconfig = new Config();
+        }
+
         public abstract string id { get; }
         public abstract string moduledesctiption { get; }
 
