@@ -1,6 +1,6 @@
 <p align="center">
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br />
-  THIS PROJECT IS WORK IN PROGRESS AND NOT CURRENTLY USABLE<br />
+                           DISCONTINUED<br />
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </p>
 
