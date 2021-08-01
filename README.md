@@ -1,6 +1,6 @@
 <p align="center">
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br />
-  RECONTINUED<br/>
+   -- RECONTINUED -- <br/>
   THIS PROJECT IS WORK IN PROGRESS AND NOT CURRENTLY USABLE<br />
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </p>
