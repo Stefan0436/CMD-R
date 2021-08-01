@@ -32,10 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{76F26F8A-183
 		lib\Update CMD-R.sh = lib\Update CMD-R.sh
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing Projects", "Testing Projects", "{ED461A17-B592-4E55-8914-75268902D833}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACA.CCFG.Testing", "ACA.CCFG.Testing\ACA.CCFG.Testing.csproj", "{6EEA1642-3C07-40AD-B332-BB3BED5E09A6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -64,6 +60,5 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{76F26F8A-1839-4D61-94EA-0AD9792BE33F} = {03EE0309-60D5-4DBF-99E3-360710C96592}
-		{6EEA1642-3C07-40AD-B332-BB3BED5E09A6} = {ED461A17-B592-4E55-8914-75268902D833}
 	EndGlobalSection
 EndGlobal
