@@ -14,95 +14,19 @@ namespace CMDR
             int i = 0;
             foreach (char c in args)
             {
-                if (c is '"')
+                if (c == '"' && (i == 0 || args[i - 1] != '\\'))
                 {
-                    bool skip = false;
-                    try
-                    {
-                        if (args[i - 1] is '\\')
-                        {
-                            skip = true;
-                        }
-                    }
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-                    catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-                    {
-
-                    }
-                    if (skip == false)
-                    {
-                        if (ignorespaces) ignorespaces = false;
-                        else ignorespaces = true;
-                    }
-                    else
-                    {
-                        last += c;
-                    }
+                    if (ignorespaces) ignorespaces = false;
+                    else ignorespaces = true;
                 }
-                else
+                else if (c == ' ' && !ignorespaces && (i == 0 || args[i - 1] != '\\'))
                 {
-                    if (c is ' ')
-                    {
-                        bool skip = false;
-                        try
-                        {
-                            if (args[i - 1] is '\\')
-                            {
-                                skip = true;
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                        if (skip == false)
-                        {
-                            if (ignorespaces)
-                            {
-                                last += c;
-                            }
-                            else
-                            {
-                                args3.Add(last);
-                                last = "";
-                            }
-                        }
-                        else
-                        {
-                            last += c;
-                        }
-                    }
-                    else if (c is '\\' == false)
-                    {
-                        last += c;
-                    }
-                    else
-                    {
-                        bool skip = false;
-                        try
-                        {
-                            if (args[i + 1] is '"')
-                            {
-                                skip = true;
-                            }
-                            else if (args[i + 1] is ' ')
-                            {
-                                if (ignorespaces == false)
-                                {
-                                    skip = true;
-                                }
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                        if (skip == false)
-                        {
-                            last += c;
-                        }
-                    }
+                    args3.Add(last);
+                    last = "";
+                }
+                else if (c != '\\' || (i + 1 < args.Length && args[i + 1] != '"' && (args[i + 1] != ' ' || ignorespaces)))
+                {
+                    last += c;
                 }
 
                 i++;

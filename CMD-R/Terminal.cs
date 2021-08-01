@@ -405,18 +405,9 @@ namespace CMDR
         }
 
         string characters = "";
-        public StreamWriter writer2;
         public bool Prompting = false;
         public void ConsoleWriteLine(string msg)
         {
-            try
-            {
-                writer2.WriteLine(msg);
-            }
-            catch
-            {
-
-            }
             try
             {
                 if (Prompting)

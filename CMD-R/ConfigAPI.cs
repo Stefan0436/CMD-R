@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CMDR // TODO: Move to ACA
+namespace ACA.Config.CCFG // TODO: Move to ACA
 {
-    public class Config
+    public class CCFG : Category
     {
         public Dictionary<string,Dictionary<string,string>> maps = new Dictionary<string, Dictionary<string,string>>();
+
+        public CCFG() : base("main")
+        {
+
+        }
+
         public Dictionary<string,string> GetMap(string name)
         {
             if (!maps.ContainsKey(name)) return null;
@@ -38,9 +44,9 @@ namespace CMDR // TODO: Move to ACA
             return content;
         }
 
-        public static Config FromString(string content)
+        public static CCFG FromString(string content)
         {
-            Config conf = new Config();
+            CCFG conf = new CCFG();
             content = content.Replace("\r", "");
             string mname = "Default";
             var map = new Dictionary<string, string>();

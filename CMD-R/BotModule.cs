@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CMDR
@@ -39,21 +40,21 @@ namespace CMDR
         public string modulepath = "";
         public string storagepath = "";
 
-        internal Config botconfig;
-        public Config GetConfig() => botconfig;
+        internal ConfigDictionary<String, Object> botconfig;
+        public ConfigDictionary<String, Object> GetConfig() => botconfig;
 
         public void SaveConfig()
         {
-            File.WriteAllText(storagepath+"/config.ccfg", GetConfig().ToString());
+            File.WriteAllText(storagepath+"/config.xml", Serializer.Serialize(GetConfig()));
         }
 
-        public void LoadConfig() 
+        public void LoadConfig()
         {
-            if (File.Exists(storagepath+"/config.ccfg"))
+            if (File.Exists(storagepath + "/config.xml"))
             {
-                botconfig = Config.FromString(File.ReadAllText(storagepath+"/config.ccfg"));
+                botconfig = Serializer.Deserialize<ConfigDictionary<String, Object>>(File.ReadAllText(storagepath + "/config.xml"));
             }
-            else botconfig = new Config();
+            else botconfig = new ConfigDictionary<String, Object>();
         }
 
         public abstract string id { get; }

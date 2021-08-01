@@ -4,6 +4,7 @@ IMPORTANT:
 Dependency list in readme (including c# libraries and nuget packages, with copyright notice)
 
 Bot core:
+IMPORTANT: Remove as many try/catch statements as possible and replace with better functions
 IMPORTANT: Clean and format README
 IMPORTANT: Reduce string and constructor usage and replace with enums
 IMPORTANT: Add CMD-R Version system (it should work with patch numbers, allowing minimal patch version in modules, howerver, the patch class should also have a version identity string)
@@ -18,6 +19,7 @@ DM Message support
 Custom command prefixes
 Better logo for CMD-R Official
 Invite link for the official on github? (not sure, the server hosting the official version is quite bad, i don't think it can take much more)
+Message logging for active channel
 
 Branch support in update-cmdr
 Patch file support in update-cmdr
@@ -25,7 +27,7 @@ Custom url support in update-cmdr
 Help system in update-cmdr and help argument
 
 Module SDK
-Module SDK documentation
+Module SDK documentation (and build-in XML docs)
 
 Bot features (each feature needs its own module):
 Command to show which users have a specific role (permission can be set by the admin)
@@ -50,6 +52,8 @@ Game RCON Terminal
 User nickname change command
 Nickname command (the bot itself)
 Other log events
+Interactive C# terminal (based on testing code)
+Message proxying (rp system)
 
 Guides:
 Setup guide (token, adding to server, controller role setup)

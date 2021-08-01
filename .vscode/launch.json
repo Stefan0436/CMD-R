@@ -12,6 +12,15 @@
             "program": "${workspaceRoot}/CMD-R/bin/Debug/CMD-R.exe",
             "console": "integratedTerminal",
             "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Launch CCFG Tests",
+            "type": "mono",
+            "preLaunchTask": "build",
+            "request": "launch",
+            "program": "${workspaceRoot}/ACA.CCFG.Testing/bin/Debug/ACA.CCFG.Testing.exe",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceRoot}"
         }
     ]
 }

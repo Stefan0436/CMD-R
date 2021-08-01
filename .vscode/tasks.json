@@ -8,6 +8,8 @@
             "type": "shell",
             "command": "msbuild",
             "args": [
+                "CMD-R/CMD-R.csproj",
+
                 // Ask msbuild to generate full paths for file names.
                 "/property:GenerateFullPaths=true",
                 "/t:build",

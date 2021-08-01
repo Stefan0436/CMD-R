@@ -35,6 +35,7 @@ namespace CMDR
         {
             return _bot;
         }
+        public string prefix = "+";
         public string token = "";
         public string path;
         public ulong guild = 0;
@@ -51,15 +52,15 @@ namespace CMDR
             {
                 if (argument == "--enable-debug" && !debugenabled)
                 {
-                    debugenabled=true;
-                    debugbreach=false;
+                    debugenabled = true;
+                    debugbreach = false;
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Bot.WriteLine("--{=-- POSSIBLE SECURITY RISK --=}-- ==>>>  Debug Enabled, ASMLD Unlocked.");
                     Console.ForegroundColor = b;
                 }
                 else if (argument == "--disable-debug" && debugenabled)
                 {
-                    debugenabled=false;
+                    debugenabled = false;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("--{=-- DEBUG SYSTEM DISABLED --=}-- ==>>>  Debug Disabled, ASMLD Locked.");
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -75,7 +76,7 @@ namespace CMDR
                         path = path + Path.DirectorySeparatorChar + Path.GetFileName(path);
                     }
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Embed Assembly: " + Path.GetFileName(path));
+                    Bot.WriteLine("--{=-- AMSLD --=}-- ==>>>  Inject Assembly: " + Path.GetFileName(path));
                     AppDomain currentDomain = AppDomain.CurrentDomain;
                     currentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
 
@@ -156,14 +157,14 @@ namespace CMDR
                         Directory.CreateDirectory(path + "/Embedded Modules/" + script.id);
                         script.modulepath = "ASM:{" + module.FullName + "}";
                         script.storagepath = path + "/Embedded Modules/" + script.id;
-                        if (!File.Exists(Bot.GetBot().path + "/Embedded Modules/" + script.id + "/Storage/config.ccfg") && File.Exists(Path.GetDirectoryName(module.Assembly.Location)+"/config-defaults.ccfg") && module.Assembly.FullName != Assembly.GetCallingAssembly().FullName)
+                        if (!File.Exists(Bot.GetBot().path + "/Embedded Modules/" + script.id + "/Storage/config.xml") && File.Exists(Path.GetDirectoryName(module.Assembly.Location) + "/config-defaults.xml") && module.Assembly.FullName != Assembly.GetCallingAssembly().FullName)
                         {
-                            File.Copy(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.ccfg", Bot.GetBot().path + "/Embedded Modules/" + script.id + "/Storage/config.ccfg");
+                            File.Copy(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.xml", Bot.GetBot().path + "/Embedded Modules/" + script.id + "/Storage/config.xml");
                         }
                         script.LoadConfig();
-                        script.SaveConfig();
                         Bot.WriteLine("Pre-initializing module: " + script.id + "...");
                         script.PreInit(this);
+                        script.SaveConfig();
                         Bot.WriteLine("Loaded module: " + script.id + "...");
                     }
                 }
@@ -231,14 +232,7 @@ namespace CMDR
                     if (Directory.Exists(path + "/temp"))
                     {
                         Bot.WriteLine("Removing existing temp folder...");
-                        try
-                        {
-                            Directory.Delete(path + "/temp");
-                        }
-                        catch
-                        {
-                            Directory.Delete(path + "/temp", true);
-                        }
+                        Directory.Delete(path + "/temp", true);
                     }
                     Bot.WriteLine("Install module package: " + info.FullName);
                     Bot.WriteLine("Extracting package to temp...");
@@ -252,14 +246,7 @@ namespace CMDR
                     try
                     {
                         Bot.WriteLine("Installing package...");
-                        try
-                        {
-                            Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
-                        }
-                        catch
-                        {
-                            Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName), true);
-                        }
+                        Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName), true);
                         Directory.Move(path + "/temp", path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
                         Bot.WriteLine("Package file " + info.Name + " has been installed.");
                     }
@@ -285,23 +272,23 @@ namespace CMDR
                     }
                 }
 
+                ConfigDictionary<String, String> conf = new ConfigDictionary<string, string>();
+                if (File.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets"))
+                {
+                    conf = Serializer.Deserialize<ConfigDictionary<String, String>>(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets"));
+                }
                 if (!File.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets") ||
-                    Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default") == null ||
-                    !Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default").ContainsKey("FileName") ||
-                    !Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default").ContainsKey("ClassName") ||
-                    !Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets")).GetMap("Default").ContainsKey("Namespace")
-                )
+                    conf.Count == 0 || !conf.ContainsKey("FileName") || !conf.ContainsKey("ClassName") || !conf.ContainsKey("Namespace"))
                 {
                     b = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Bot.WriteLine(" -- WARNING -- ==>>> Extracted bot module package '" + info.Name + "' does not contain a valid pointer file, unable to load it.");
                     Console.ForegroundColor = b;
                 }
-                Config c = Config.FromString(File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets"));
-                LoadBotModule(c.GetMap("Default")["FileName"],
+                LoadBotModule(conf.GetValue("FileName"),
                     path + Path.DirectorySeparatorChar + "Module Packages" + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(info.FullName),
-                    c.GetMap("Default")["ClassName"],
-                    c.GetMap("Default")["Namespace"]
+                    conf.GetValue("ClassName"),
+                    conf.GetValue("Namespace")
                 );
             }
 
@@ -461,6 +448,8 @@ namespace CMDR
                 }
                 else if (command.StartsWith("msg ", StringComparison.CurrentCulture))
                 {
+                    if (guild != 0 && client.GetGuild(guild) == null)
+                        guild = 0;
                     if (guild != 0)
                     {
                         string str = command.Substring("str ".Length);
@@ -523,6 +512,8 @@ namespace CMDR
                 }
                 else if (command == "activeserver")
                 {
+                    if (guild != 0 && client.GetGuild(guild) == null)
+                        guild = 0;
                     if (guild != 0)
                     {
                         Bot.WriteLine("Active server: " + client.GetGuild(guild).Name + " (" + guild + ")");
@@ -609,16 +600,16 @@ namespace CMDR
                 Bot.WriteLine("Module description: " + script.moduledesctiption);
                 Bot.GetBot().modules.Add(script);
                 Directory.CreateDirectory(Bot.GetBot().path + "/Modules/" + script.id + "/Storage");
-                if (!File.Exists(Bot.GetBot().path + "/Modules/" + script.id + "/Storage/config.ccfg") && File.Exists(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.ccfg"))
+                if (!File.Exists(Bot.GetBot().path + "/Modules/" + script.id + "/Storage/config.xml") && File.Exists(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.xml"))
                 {
-                    File.Copy(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.ccfg", Bot.GetBot().path + "/Modules/" + script.id + "/Storage/config.ccfg");
+                    File.Copy(Bot.GetBot().path + "/Modules/" + script.id + "/config-defaults.xml", Bot.GetBot().path + "/Modules/" + script.id + "/Storage/config.xml");
                 }
                 script.modulepath = Path.GetFullPath(filefolder + Path.DirectorySeparatorChar + filename + ".dll");
                 script.storagepath = Path.GetFullPath(Bot.GetBot().path + Path.DirectorySeparatorChar + "Modules" + Path.DirectorySeparatorChar + script.id + Path.DirectorySeparatorChar + "Storage");
                 script.LoadConfig();
-                script.SaveConfig();
                 Bot.WriteLine("Pre-initializing module: " + script.id + "...");
                 script.PreInit(Bot.GetBot());
+                script.SaveConfig();
                 Bot.WriteLine("Loaded module: " + script.id + "...");
             }
         }
@@ -661,23 +652,7 @@ namespace CMDR
 
                 ulong id = server;
                 if (servers.Find(t => t.id == server) != null) servers.Remove(servers.Find(t => t.id == server));
-                try
-                {
-                    Directory.Delete(path + "/Server Configs/" + id, true);
-                }
-                catch
-                {
-                    try
-                    {
-                        Directory.Delete(path + "/Server Configs/" + id, true);
-                    }
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-                    catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-                    {
-
-                    }
-                }
+                if (Directory.Exists(path + "/Server Configs/" + id)) Directory.Delete(path + "/Server Configs/" + id, true);
 
                 Bot.WriteLine("Deleted server config of the server " + name + " (" + server + ")");
             }
@@ -815,7 +790,7 @@ namespace CMDR
             var message = msg as SocketUserMessage;
             if (message == null) return;
             SocketTextChannel ch = message.Channel as SocketTextChannel;
-            if (msg.Content.StartsWith("+", StringComparison.CurrentCulture) && ch != null && !msg.Content.StartsWith("+ ", StringComparison.CurrentCulture) && msg.Content != "+")
+            if (msg.Content.StartsWith(prefix, StringComparison.CurrentCulture) && ch != null && !msg.Content.StartsWith("+ ", StringComparison.CurrentCulture) && msg.Content != prefix)
             {
                 bool found = false;
                 foreach (SystemCommand cmd in commands)
@@ -823,7 +798,7 @@ namespace CMDR
                     if (cmd.allowDiscord)
                     {
                         string fullcmd = message.Content;
-                        string cmdid = fullcmd.Substring(1);
+                        string cmdid = fullcmd.Substring(prefix.Length);
                         string arguments = "";
                         if (fullcmd.Contains(" "))
                         {
@@ -853,12 +828,12 @@ namespace CMDR
                 }
                 if (!found)
                 {
-                    await message.Channel.SendMessageAsync("I am sorry, but i don't recognize that command, use +help for commands.");
+                    await message.Channel.SendMessageAsync("I am sorry, but i don't recognize that command, use " + prefix + "help for commands.");
                 }
             }
             else
             {
-                if (message.Channel is SocketDMChannel && message.Author.Id != client.CurrentUser.Id) await msg.Channel.SendMessageAsync("```diff\n- I am sorry, but CMD-R do not support direct messages yet.\n- Please go to a server and run +help for a list of commands```");
+                if (message.Channel is SocketDMChannel && message.Author.Id != client.CurrentUser.Id) await msg.Channel.SendMessageAsync("```diff\n- I am sorry, but CMD-R do not support direct messages yet.\n- Please go to a server and run " + prefix + "help for a list of commands```");
             }
         }
 
@@ -869,15 +844,8 @@ namespace CMDR
                 Task<Discord.Rest.RestUserMessage> t = channel.SendMessageAsync(message);
                 await t;
                 await Task.Delay(durationsec * 1000);
-                try
-                {
-                    await t.GetAwaiter().GetResult().DeleteAsync();
-                }
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
-                catch
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
-                {
-                }
+                // TODO: Test if the message needs to exist to call delete, if it does, find a way to do it right and not through try/catch!
+                await t.GetAwaiter().GetResult().DeleteAsync();
             });
         }
     }

@@ -89,7 +89,7 @@
     <Compile Include="Server.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Terminal.cs" />
-    <Compile Include="ConfigAPI.cs" />
+    <Compile Include="ConfigDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
