@@ -114,19 +114,6 @@ namespace CMDR
             Bot.WriteLine("------------------------------------------------------------------");
             Bot.WriteLine();
             Bot.WriteLine("System path: " + path);
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(delegate (Object sender, ConsoleCancelEventArgs e) {
-                if (e.SpecialKey == ConsoleSpecialKey.ControlBreak) {
-                    Bot.WriteLine("Shutting down CMD-R, CTRL+BREAK detected...");
-                    client.SetGameAsync("Shutting down...").GetAwaiter().GetResult();
-                    client.SetStatusAsync(UserStatus.Invisible).GetAwaiter().GetResult();
-                    client.StopAsync().GetAwaiter().GetResult();
-                    client.Dispose();
-                    Server.RunSaveAll(true);
-                    Server.StopAutoSaveThread();
-                    Environment.Exit(0);
-                }
-                e.Cancel = true;
-            });
             Directory.CreateDirectory(path + "/Modules");
             Directory.CreateDirectory(path + "/Module Packages");
             Directory.CreateDirectory(path + "/Embedded Modules");
@@ -144,6 +131,19 @@ namespace CMDR
                 newToken = true;
             }
 
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(delegate (Object sender, ConsoleCancelEventArgs e) {
+                if (e.SpecialKey == ConsoleSpecialKey.ControlBreak) {
+                    Bot.WriteLine("Shutting down CMD-R, CTRL+BREAK detected...");
+                    client.SetGameAsync("Shutting down...").GetAwaiter().GetResult();
+                    client.SetStatusAsync(UserStatus.Invisible).GetAwaiter().GetResult();
+                    client.StopAsync().GetAwaiter().GetResult();
+                    client.Dispose();
+                    Server.RunSaveAll(true);
+                    Server.StopAutoSaveThread();
+                    Environment.Exit(0);
+                }
+                e.Cancel = true;
+            });
             Bot.WriteLine("Starting Discord.NET framework...");
             client = new DiscordSocketClient();
 
