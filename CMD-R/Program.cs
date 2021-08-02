@@ -234,7 +234,7 @@ namespace CMDR
                     string newpatch = "";
                     
                     // Read the archive for getting the new version file, skip if patch.ver is not in the archive
-                    ZipArchive file = ZipFile.OpenRead(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
+                    ZipArchive file = ZipFile.OpenRead(path + "/Module Packages/" + Path.GetFileName(info.FullName));
                     if (file.Entries.ToList().Find(t => t.Name == "patch.ver") != null)
                     {
                         try
@@ -279,7 +279,8 @@ namespace CMDR
                     try
                     {
                         Bot.WriteLine("Installing package...");
-                        Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName), true);
+                        if (Directory.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName)))
+                            Directory.Delete(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName), true);
                         Directory.Move(path + "/temp", path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
                         Bot.WriteLine("Package file " + info.Name + " has been installed.");
                     }
