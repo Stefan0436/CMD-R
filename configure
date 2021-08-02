@@ -10,6 +10,7 @@ chmod +x set-store-credentials
 chmod +x global-set-cache-credentials
 chmod +x global-set-store-credentials
 chmod +x lib/*
+
 if [ ! -f ".systeminitializedrepobefore" ] && [ ! "$*" == "--norepoconfig" ] || [ "$*" == "--newrepoconfig" ]; then
     echo Initializing repo...
     ./init-repo
@@ -47,18 +48,18 @@ fi
 echo Checking dependencies...
 missingdepends=false
 
-requiredvermono=5.18.0
 requiredvermsbuild=15.6.0.0
 requiredvernuget=5.6.0.6591
 requiredvermake=4.3
 requiredvergit=2.28.0
+requiredverdotnet=5.0.205
 
-echo Searching for mono...
-if command -v mono &> /dev/null 
+echo Searching for dotnet...
+if command -v dotnet &> /dev/null 
 then
-    requiredver=$requiredvermono
-    currentver="$(mono --version|grep --only-matching --perl-regexp "\\d+\.\\d+\.\\d+")"
-    packagename=Mono
+    requiredver=$requiredverdotnet
+    currentver="$(dotnet --version)"
+    packagename="DotNet SDK"
     installed=false
     
     if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
@@ -70,10 +71,10 @@ then
         missingdepends=true
     fi
     
-    monoinstalled=$installed
+    dotnetinstalled=$installed
 else
-    echo Mono is NOT installed.
-    monoinstalled=false
+    echo DotNet SDK Core is NOT installed.
+    dotnetinstalled=false
     missingdepends=true
 fi
 
@@ -182,8 +183,8 @@ if [ $missingdepends == "false" ]; then
 else
     echo
     echo You are missing the following dependencies:
-    if [ "$monoinstalled" == "false" ]; then 
-        echo Mono version $requiredvermono or above.
+    if [ "$dotnetinstalled" == "false" ]; then 
+        echo Mono version $requiredverdotnet or above.
     fi
     if [ "$msbuildinstalled" == "false" ]; then 
         echo MSBuild version $requiredvermsbuild or above.

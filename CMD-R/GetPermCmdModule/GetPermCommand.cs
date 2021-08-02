@@ -7,8 +7,11 @@ namespace CMDR.GetPermCmdModule
 {
     public class GetPermCommand : SystemCommand
     {
-        public CmdCategory c = new CmdCategory("Not-categorized-cmds", "Commands that don't have a category");
-        public override CmdCategory Category => c;
+        public CmdCategory c1 = new CmdCategory("utility", "Utility commands");
+        public CmdCategory c2 = new CmdCategory("admin", "Administrative utility commands");
+        public CmdCategory c3 = new CmdCategory("permissions", "Utility commands for permission management");
+
+        public override CmdCategory[] Categories => new CmdCategory[]{ c1, c2, c3 };
 
         public override string commandid => "getperm";
 
@@ -24,9 +27,7 @@ namespace CMDR.GetPermCmdModule
 
         public override bool allowDiscord => true;
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task OnExecuteFromDiscord(SocketGuild guild, SocketUser user, SocketTextChannel channel, SocketMessage messageobject, string fullmessage, string arguments_string, List<string> arguments)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (arguments.Count == 1)
             {

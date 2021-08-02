@@ -16,13 +16,11 @@ namespace CMDR.HelpCmdModule
         public override void PostInit(Bot bot)
         {
             RegisterCommand(new HelpCommand());
+            RegisterCommand(new LsCmdCategoriesCommand());
         }
 
         public override void PreInit(Bot bot)
         {
-            GetConfig().AddIfAbsent("test 1", 2523);
-            GetConfig().AddIfAbsent("test 2", 25123);
-            GetConfig().AddIfAbsent("test", "Hi");
         }
 
         public override void RegisterCommands(Bot bot)

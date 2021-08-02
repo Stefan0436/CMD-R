@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CMDR
 {
@@ -13,9 +14,14 @@ namespace CMDR
 
         public void RegisterCommand(SystemCommand command)
         {
-            if (command.Category.name == command.commandid) throw new Exception("Error: a category exists with that id.");
-            if (GetBot().CmdCategories.Find(t => t.name == command.commandid) != null) throw new Exception("Error: a category exists with that id.");
-            if (command.commandid.Contains(" ")) throw new FormatException("Command id cannot contain space symbols.");
+            if (GetBot().CmdCategories.Find(t => t.name.ToLower() == command.commandid.ToLower()) != null)
+                throw new Exception("Error: a category exists with that command id.");
+
+            if (command.Categories.Any(t => t.name.ToLower() == command.commandid.ToLower()))
+                throw new Exception("Error: a category exists with that command id.");
+            
+            if (command.commandid.Contains(" "))
+                throw new FormatException("Command id cannot contain space symbols.");
 
             Bot.WriteLine();
             Bot.WriteLine("Registering command " + command.commandid + " from module " + id + "...");
@@ -26,11 +32,21 @@ namespace CMDR
             Bot.WriteLine("    Allow call from discord = " + command.allowDiscord);
             if (command.allowDiscord)  Bot.WriteLine("    Allow call from discord without command specifier = " + command.setNoCmdPrefix);
             Bot.WriteLine("    Allow call from terminal = " + command.allowTerminal);
-            Bot.WriteLine("    Category = " + command.Category.name);
-            if (GetBot().CmdCategories.Find(t=>t.name == command.Category.name) == null)
+
+            string catPretty = "";
+            foreach (CmdCategory c in command.Categories) 
             {
-                GetBot().CmdCategories.Add(command.Category); 
+                if (catPretty.Length != 0)
+                    catPretty += ", ";
+                catPretty += c.name;
+
+                if (GetBot().CmdCategories.Find(t => t.name == c.name) == null)
+                {
+                    GetBot().CmdCategories.Add(c); 
+                }
             }
+
+            Bot.WriteLine("    Categories = " + catPretty);
 
             Bot.WriteLine();
 

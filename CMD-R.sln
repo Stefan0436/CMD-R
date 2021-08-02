@@ -1,64 +1,34 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMD-R", "CMD-R\CMD-R.csproj", "{10AA5418-A255-4DA3-91BB-CEBDCC091EF0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03EE0309-60D5-4DBF-99E3-360710C96592}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		commit = commit
-		commit-and-push = commit-and-push
-		configure = configure
-		init-repo = init-repo
-		pull = pull
-		README.md = README.md
-		push = push
-		LICENSE = LICENSE
-		todo.txt = todo.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{76F26F8A-1839-4D61-94EA-0AD9792BE33F}"
-	ProjectSection(SolutionItems) = preProject
-		lib\Start CMD-R = lib\Start CMD-R
-		lib\cmd-r = lib\cmd-r
-		lib\do-install-c.sh = lib\do-install-c.sh
-		lib\do-uninstall-c.sh = lib\do-uninstall-c.sh
-		lib\install.sh = lib\install.sh
-		lib\install-c.sh = lib\install-c.sh
-		lib\uninstall.sh = lib\uninstall.sh
-		lib\uninstall-c.sh = lib\uninstall-c.sh
-		lib\Update and start CMD-R.sh = lib\Update and start CMD-R.sh
-		lib\update-cmdr = lib\update-cmdr
-		lib\Update CMD-R.sh = lib\Update CMD-R.sh
-	EndProjectSection
+# Visual Studio Version 16
+VisualStudioVersion = 16.6.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMD-R", "CMD-R\CMD-R.csproj", "{7B6847C7-64CA-48F5-9379-252AE659BA2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{10AA5418-A255-4DA3-91BB-CEBDCC091EF0}.Debug|x86.ActiveCfg = Debug|x86
-		{10AA5418-A255-4DA3-91BB-CEBDCC091EF0}.Debug|x86.Build.0 = Debug|x86
-		{10AA5418-A255-4DA3-91BB-CEBDCC091EF0}.Release|x86.ActiveCfg = Release|x86
-		{10AA5418-A255-4DA3-91BB-CEBDCC091EF0}.Release|x86.Build.0 = Release|x86
-		{6EEA1642-3C07-40AD-B332-BB3BED5E09A6}.Debug|x86.ActiveCfg = Debug|x86
-		{6EEA1642-3C07-40AD-B332-BB3BED5E09A6}.Debug|x86.Build.0 = Debug|x86
-		{6EEA1642-3C07-40AD-B332-BB3BED5E09A6}.Release|x86.ActiveCfg = Release|x86
-		{6EEA1642-3C07-40AD-B332-BB3BED5E09A6}.Release|x86.Build.0 = Release|x86
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		Policies = $0
-		$0.DotNetNamingPolicy = $1
-		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
-		$0.TextStylePolicy = $2
-		$2.inheritsSet = null
-		$2.scope = application/xml
-		$0.XmlFormattingPolicy = $3
-		$3.scope = application/xml
-		$0.StandardHeader = $4
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{76F26F8A-1839-4D61-94EA-0AD9792BE33F} = {03EE0309-60D5-4DBF-99E3-360710C96592}
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Debug|x64.Build.0 = Debug|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Debug|x86.Build.0 = Debug|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Release|x64.ActiveCfg = Release|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Release|x64.Build.0 = Release|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Release|x86.ActiveCfg = Release|Any CPU
+		{7B6847C7-64CA-48F5-9379-252AE659BA2C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -13,7 +13,7 @@ namespace CMDR
             return Bot.GetBot();
         }
 
-        public abstract CmdCategory Category { get; }
+        public abstract CmdCategory[] Categories { get; }
         public abstract string commandid { get; }
         public abstract string helpsyntax { get; }
         public abstract string description { get; }

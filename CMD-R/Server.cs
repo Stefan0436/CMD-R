@@ -24,21 +24,33 @@ namespace CMDR
             Bot.WriteLine("Save completed.");
             _has_changes = false;
         }
-
+        
+        private static bool stopAutosave = false;
+        private static bool stoppedAutosave = false;
         public static void StartAutoSaveThread()
         {
             if (t != null) throw new Exception("AutoSave is already active, you can not start it twice");
 
             Bot.WriteLine("Starting the autosave system...");
-
+            
+            stoppedAutosave = false;
+            stopAutosave = false;
             t = new Thread(() => { 
-                while (true)
+                while (stopAutosave)
                 {
-                    Thread.Sleep(AutoSaveMinutes * 60 * 1000);
+                    for (int i = 0; i < AutoSaveMinutes * 60 * 10; i++) {
+                        Thread.Sleep(100);
+                        if (stopAutosave)
+                            break;
+                    }
+                    if (stopAutosave)
+                        break;
+                    
                     Bot.WriteLine("Autosave was triggered, checking...");
                     if (_has_changes) new Thread(RunSaveAll).Start();
                     else Bot.WriteLine("No changes.");
                 }
+                stoppedAutosave = true;
             });
 
             t.Start();
@@ -50,7 +62,12 @@ namespace CMDR
         {
             if (t == null) throw new Exception("AutoSave is not active, you can not stop it if it is not running");
             Bot.WriteLine("Stopping the autosave system...");
-            t.Abort();
+            
+            stopAutosave = true;
+            while (!stoppedAutosave) {
+                Thread.Sleep(100);
+            }
+            
             t = null;
             Bot.WriteLine("Stopped the autosave system.");
         }

@@ -114,12 +114,26 @@ namespace CMDR
             Bot.WriteLine("------------------------------------------------------------------");
             Bot.WriteLine();
             Bot.WriteLine("System path: " + path);
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(delegate (Object sender, ConsoleCancelEventArgs e) {
+                if (e.SpecialKey == ConsoleSpecialKey.ControlBreak) {
+                    Bot.WriteLine("Shutting down CMD-R, CTRL+BREAK detected...");
+                    client.SetGameAsync("Shutting down...").GetAwaiter().GetResult();
+                    client.SetStatusAsync(UserStatus.Invisible).GetAwaiter().GetResult();
+                    client.StopAsync().GetAwaiter().GetResult();
+                    client.Dispose();
+                    Server.RunSaveAll(true);
+                    Server.StopAutoSaveThread();
+                    Environment.Exit(0);
+                }
+                e.Cancel = true;
+            });
             Directory.CreateDirectory(path + "/Modules");
             Directory.CreateDirectory(path + "/Module Packages");
             Directory.CreateDirectory(path + "/Embedded Modules");
 
             Bot.WriteLine();
             Bot.WriteLine("Loading token...");
+            bool newToken = false;
             if (File.Exists(path + "/Bot.cfg"))
             {
                 token = File.ReadAllText(path + "/Bot.cfg").Replace("\n", "");
@@ -127,8 +141,7 @@ namespace CMDR
             else
             {
                 token = Terminal.ReadLine("Bot token").Replace("\n", "");
-                Bot.WriteLine("\nSaved to file Bot.cfg, edit it to change the token.");
-                File.WriteAllText(path + "/Bot.cfg", token);
+                newToken = true;
             }
 
             Bot.WriteLine("Starting Discord.NET framework...");
@@ -137,6 +150,11 @@ namespace CMDR
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
             await client.SetGameAsync("Starting CMD-R...");
+
+            if (newToken) {
+                Bot.WriteLine("\nSaved to file Bot.cfg, edit it to change the token.");
+                File.WriteAllText(path + "/Bot.cfg", token);
+            }
 
             while (client.ConnectionState == ConnectionState.Connecting || client.ConnectionState == ConnectionState.Disconnected) { Thread.Sleep(100); }
             while (client.Guilds.Count == 0 || client.Guilds.FirstOrDefault().Name == null || client.Guilds.FirstOrDefault().Name == "") { Thread.Sleep(100); }
@@ -189,17 +207,32 @@ namespace CMDR
             Bot.WriteLine("Loading modules from the packages...");
             foreach (FileInfo info in new DirectoryInfo(path + "/Module Packages").GetFiles("*.cpkg"))
             {
+                loadPackage(info);
+            }
+            
+            // Load CMF (Cyan Modfile) formatted packages
+            // CMF are zips too, just like jars
+            //
+            // By allowing CMFs to be loaded in  CMD-R, one can create a one-fits-all package
+            // When you create a Connective module, you can add a pointer file, dll, and mod.manifest.ccfg document
+            // to make it compatible with CMD-R, Connective and Cyan. (if you combine the packages)
+            foreach (FileInfo info in new DirectoryInfo(path + "/Module Packages").GetFiles("*.cmf"))
+            {
+                loadPackage(info);
+            }
+            
+            void loadPackage(FileInfo info) {
                 bool update = false;
-
+                
                 if (!Directory.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName))) update = true; // Make sure the package gets extracted if new
                 else
                 {
                     // Check if package archive is newer than extracted version
                     string oldpatch = (File.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/patch.ver") ? File.ReadAllText(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/patch.ver") : "");
                     // If the patch.ver file does not exist, the string is empty
-
+                    
                     string newpatch = "";
-
+                    
                     // Read the archive for getting the new version file, skip if patch.ver is not in the archive
                     ZipArchive file = ZipFile.OpenRead(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName));
                     if (file.Entries.ToList().Find(t => t.Name == "patch.ver") != null)
@@ -212,20 +245,20 @@ namespace CMDR
                         }
                         catch
                         {
-
+                            
                         }
                     }
-
+                    
                     int newv = 0;
                     int oldv = 0;
-
+                    
                     // Parse if the strings are not empty
                     if (newpatch != "") newv = int.Parse(newpatch);
                     if (oldpatch != "") oldv = int.Parse(oldpatch);
-
+                    
                     update = (oldv < newv); // Check if the archive is newer than the folder
                 }
-
+                
                 // Extract files if new/updated
                 if (update)
                 {
@@ -267,11 +300,13 @@ namespace CMDR
                         {
                             Directory.Move(path + "/temp/Storage", path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/Storage");
                         }
-
+                        
+                        #pragma warning disable CA2200
                         throw e;
+                        #pragma warning restore CA2200
                     }
                 }
-
+                
                 ConfigDictionary<String, String> conf = new ConfigDictionary<string, string>();
                 if (File.Exists(path + "/Module Packages/" + Path.GetFileNameWithoutExtension(info.FullName) + "/pointer.targets"))
                 {
@@ -286,9 +321,9 @@ namespace CMDR
                     Console.ForegroundColor = b;
                 }
                 LoadBotModule(conf.GetValue("FileName"),
-                    path + Path.DirectorySeparatorChar + "Module Packages" + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(info.FullName),
-                    conf.GetValue("ClassName"),
-                    conf.GetValue("Namespace")
+                              path + Path.DirectorySeparatorChar + "Module Packages" + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(info.FullName),
+                              conf.GetValue("ClassName"),
+                              conf.GetValue("Namespace")
                 );
             }
 
@@ -790,7 +825,7 @@ namespace CMDR
             var message = msg as SocketUserMessage;
             if (message == null) return;
             SocketTextChannel ch = message.Channel as SocketTextChannel;
-            if (msg.Content.StartsWith(prefix, StringComparison.CurrentCulture) && ch != null && !msg.Content.StartsWith("+ ", StringComparison.CurrentCulture) && msg.Content != prefix)
+            if (msg.Content.StartsWith(prefix, StringComparison.CurrentCulture) && ch != null && !msg.Content.StartsWith(prefix + " ", StringComparison.CurrentCulture) && msg.Content != prefix)
             {
                 bool found = false;
                 foreach (SystemCommand cmd in commands)
@@ -812,12 +847,7 @@ namespace CMDR
 
                             if (CheckPermissions(cmd.permissionnode, msg.Author, ch.Guild))
                             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                Task.Run(async delegate
-                                {
-                                    await cmd.OnExecuteFromDiscord(ch.Guild, msg.Author, ch, msg, fullcmd, arguments, GetArgumentListFromString(arguments));
-                                });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                await cmd.OnExecuteFromDiscord(ch.Guild, msg.Author, ch, msg, fullcmd, arguments, GetArgumentListFromString(arguments));
                             }
                             else
                             {
@@ -831,9 +861,34 @@ namespace CMDR
                     await message.Channel.SendMessageAsync("I am sorry, but i don't recognize that command, use " + prefix + "help for commands.");
                 }
             }
-            else
-            {
-                if (message.Channel is SocketDMChannel && message.Author.Id != client.CurrentUser.Id) await msg.Channel.SendMessageAsync("```diff\n- I am sorry, but CMD-R do not support direct messages yet.\n- Please go to a server and run " + prefix + "help for a list of commands```");
+            else if (message.Channel is SocketDMChannel && message.Author.Id != client.CurrentUser.Id) await msg.Channel.SendMessageAsync("```diff\n- I am sorry, but CMD-R do not support direct messages yet.\n- Please go to a server and run " + prefix + "help for a list of commands```");
+            else {
+                foreach (SystemCommand cmd in commands)
+                {
+                    if (cmd.allowDiscord && cmd.setNoCmdPrefix)
+                    {
+                        string fullcmd = message.Content;
+                        string cmdid = fullcmd;
+                        string arguments = "";
+                        if (fullcmd.Contains(" "))
+                        {
+                            arguments = cmdid.Substring(cmdid.IndexOf(" ", StringComparison.CurrentCulture) + 1);
+                            cmdid = cmdid.Remove(cmdid.IndexOf(" ", StringComparison.CurrentCulture));
+                        }
+
+                        if (cmd.commandid.ToLower() == cmdid.ToLower())
+                        {
+                            if (CheckPermissions(cmd.permissionnode, msg.Author, ch.Guild))
+                            {
+                                await cmd.OnExecuteFromDiscord(ch.Guild, msg.Author, ch, msg, fullcmd, arguments, GetArgumentListFromString(arguments));
+                            }
+                            else
+                            {
+                                await message.Channel.SendMessageAsync("```diff\n- I am sorry, but you are not allowed to run that command```");
+                            }
+                        }
+                    }
+                }
             }
         }
 

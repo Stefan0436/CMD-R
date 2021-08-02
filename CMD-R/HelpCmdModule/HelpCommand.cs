@@ -24,9 +24,9 @@ namespace CMDR.HelpCmdModule
 
         public override bool allowDiscord => true;
 
-        public CmdCategory c = new CmdCategory("Not-categorized-cmds", "Commands that don't have a category");
-        public override CmdCategory Category => c;
-
+        public CmdCategory c = new CmdCategory("noncategorized", "Commands that don't have a category");
+        public override CmdCategory[] Categories => new CmdCategory[] { c };
+        
         public override async Task OnExecuteFromDiscord(SocketGuild guild, SocketUser user, SocketTextChannel channel, SocketMessage messageobject, string fullmessage, string arguments_string, List<string> arguments)
         {
             int page = 0;
@@ -36,8 +36,121 @@ namespace CMDR.HelpCmdModule
             Emoji em2 = new Emoji("\u23ED");
 
             String currentPage = "```A list of known commands:";
+            List<SystemCommand> commands = new List<SystemCommand>();
+
             foreach (SystemCommand command in GetBot().commands)
             {
+                if (arguments.Count != 0) {
+                    bool found = false;
+                    foreach (CmdCategory cat in command.Categories) {
+                        if (cat.name.ToLower() == arguments[0].ToLower()) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    bool found = false;
+                    foreach (CmdCategory cat in command.Categories) {
+                        if (cat.name.ToLower().StartsWith(arguments[0].ToLower())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    bool found = false;
+                    foreach (CmdCategory cat in command.Categories) {
+                        if (cat.name.ToLower().Contains(arguments[0].ToLower())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    if (command.commandid.ToLower() != arguments[0].ToLower())
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    if (!command.commandid.ToLower().StartsWith(arguments[0].ToLower()))
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    if (!command.commandid.ToLower().Contains(arguments[0].ToLower()))
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    if (!command.description.ToLower().StartsWith(arguments[0].ToLower()))
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in GetBot().commands)
+            {
+                if (arguments.Count != 0) {
+                    if (!command.description.ToLower().Contains(arguments[0].ToLower()))
+                        continue;
+                }
+
+                if (!commands.Contains(command))
+                    commands.Add(command);
+            }
+
+            foreach (SystemCommand command in commands) {
+                if (!Bot.GetBot().CheckPermissions(command.permissionnode, user, guild)) {
+                    continue;
+                }
                 if (currentPage.Length + 3 >= 2000) {
                     currentPage += "```";
                     pages.Add(currentPage);
@@ -51,7 +164,7 @@ namespace CMDR.HelpCmdModule
                 pages.Add(currentPage);
             }
 
-            Discord.Rest.RestUserMessage message = channel.SendMessageAsync(pages[page]).GetAwaiter().GetResult();
+            Discord.Rest.RestUserMessage message = await channel.SendMessageAsync(pages[page]);
 
             Func<Cacheable<IUserMessage, ulong>, ISocketMessageChannel, SocketReaction, Task> handler = new Func<Cacheable<IUserMessage, ulong>, ISocketMessageChannel, SocketReaction, Task>((arg1, arg2, arg3) =>
             {
@@ -132,7 +245,7 @@ namespace CMDR.HelpCmdModule
             if (pages.Count != 1)
             {
                 if (page != pages.Count)
-                    message.AddReactionAsync(em2).GetAwaiter().GetResult();
+                   await message.AddReactionAsync(em2);
             }
         }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using TextCopy;
 
 namespace CMDR
 {
@@ -27,35 +27,6 @@ namespace CMDR
 
     public class BetterLogger
     {
-        // Expose Clipboard as a TextReader.
-
-        public static class ClipboardTextReaderFactory
-
-        {
-
-            static public TextReader GetReader()
-
-            {
-
-                IDataObject iData = Clipboard.GetDataObject();
-
-                string s = null;
-                try
-                {
-                    s = (string)iData.GetData(DataFormats.Text);
-                }
-                catch
-                {
-
-                }
-                if (s == null) { s = ""; }
-
-                return new StringReader(s);
-
-            }
-
-        }
-
         List<string> cmds = new List<string>();
         int cmdnum = 0;
 
@@ -142,7 +113,7 @@ namespace CMDR
                     }
                     else if (key.Key == ConsoleKey.V && key.Modifiers.HasFlag(ConsoleModifiers.Control))
                     {
-                        string data = ClipboardTextReaderFactory.GetReader().ReadToEnd();
+                        string data = ClipboardService.GetText();
 
                         data = data.Replace("\r", "");
                         if (data.Contains("\n"))
@@ -413,14 +384,14 @@ namespace CMDR
                 if (Prompting)
                 {
                     string str = pref.Replace("$<path>", Environment.CurrentDirectory) + "> ";
-
+                  
                     if (pref == "") str = "";
 
                     int l = (str + characters).Length;
 
                     for (int i = 0; i < l; i++)
                     {
-                        if (Console.CursorLeft != 0)
+                        if (Console.GetCursorPosition().Left != 0)
                         {
                             Console.Write("\b \b");
                         }
