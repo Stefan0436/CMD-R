@@ -198,4 +198,5 @@ else
     if [ "$gitinstalled" == "false" ]; then 
         echo Git version $requiredvergit or above.
     fi
+    exit 1
 fi
