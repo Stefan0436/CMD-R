@@ -14,6 +14,3 @@ echo Copying compiled files to build folder...
 rm -rf build
 mkdir build
 cp -rf CMD-R/bin/Debug/net5.0/. ./build
-echo Deleting bin and obj folder...
-#rm -rf ./CMD-R/bin
-#rm -rf ./CMD-R/obj 
